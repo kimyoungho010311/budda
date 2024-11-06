@@ -13,7 +13,7 @@ function NavBarModule() {
       </div>
       <div>
         <form>
-          <input placeholder={styles.Search} />
+          <input placeholder="Search" className={styles.Search} />
         </form>
       </div>
       <div className={styles.nav_bar_log}>
