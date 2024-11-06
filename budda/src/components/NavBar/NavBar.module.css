@@ -22,9 +22,15 @@
 }
 .nav_bar_menu_1 {
   padding: 5px;
+  padding-right: 40px;
   margin: 5px;
   background-color: white;
   border: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+.Search {
+  width: ;
 }
 .nav_bar_log {
   display: flex;
@@ -32,6 +38,8 @@
 .nav_bar_log_1,
 .nav_bar_log_2 {
   padding: 8px;
+  font-size: 20px;
+  font-weight: bolder;
 }
 .nav_bar_log_1 {
   background-color: white;

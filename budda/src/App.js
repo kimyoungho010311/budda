@@ -1,13 +1,15 @@
 import "./App.css";
 import NavBarModule from "./components/NavBar/NavBar";
 import Header from "./components/Header/Header";
-
+import Main from "./components/BestRecipe/Main";
 function App() {
   return (
     <div className="App">
       <NavBarModule></NavBarModule>
       <Header></Header>
-      <div>123123</div>
+      <main>
+        <Main></Main>
+      </main>
     </div>
   );
 }
