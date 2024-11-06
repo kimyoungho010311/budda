@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/budda/static/css/main.7b61713f.css",
+    "main.js": "/budda/static/js/main.3e798313.js",
+    "static/media/HealthyFood.png": "/budda/static/media/HealthyFood.a541985db5798c3ce898.png",
+    "static/media/HeaderRightImg.png": "/budda/static/media/HeaderRightImg.52fdccf0331998d58b9e.png",
+    "static/media/ProgressRightImg.png": "/budda/static/media/ProgressRightImg.9166e4b6d50e00a6f249.png",
+    "index.html": "/budda/index.html",
+    "main.7b61713f.css.map": "/budda/static/css/main.7b61713f.css.map",
+    "main.3e798313.js.map": "/budda/static/js/main.3e798313.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7b61713f.css",
+    "static/js/main.3e798313.js"
+  ]
+}
