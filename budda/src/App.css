@@ -25,7 +25,7 @@
 }
 .Header_bottom {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   overflow: hidden; /* hide overflowing image parts */
   position: relative;
 }
@@ -48,6 +48,7 @@
   align-items: center;
   font-size: small;
   font-weight: bolder;
+  margin-left: 30px;
 }
 .Header_bottom_form {
   display: flex;
