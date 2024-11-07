@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
-import HeaderImg from "/Users/kim-youngho/Desktop/budda/budda/src/img/HealthyFood.png";
-import HeaderRightImg from "/Users/kim-youngho/Desktop/budda/budda/src/img/HeaderRightImg.png";
+import HeaderImg from "../../img/HealthyFood.png";
+import HeaderRightImg from "../../img/HeaderRightImg.png";
 
 function Header() {
   return (

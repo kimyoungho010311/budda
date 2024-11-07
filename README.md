@@ -1,3 +1,0 @@
-# budda
-
-Newwork programming
