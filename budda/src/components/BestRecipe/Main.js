@@ -1,5 +1,5 @@
 import styles from "./Main.module.css";
-import ProgressRightImg from "/Users/kim-youngho/Desktop/budda/budda/src/img/ProgressRightImg.png";
+import ProgressRightImg from "../../img/ProgressRightImg.png";
 function Main() {
   return (
     <div className={styles.container}>
@@ -41,6 +41,24 @@ function Main() {
         </div>
         <img src={ProgressRightImg} className={styles.ProgressRightImg} />
         <div className={styles.show_progress_btn}></div>
+      </div>
+
+      <h1 className={styles.h1}>Most Populer chefs</h1>
+      <div className={styles.MainList}>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+      </div>
+
+      <h1 className={styles.h1}>Recent veiw recipe</h1>
+      <div className={styles.MainList}>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
       </div>
     </div>
   );
