@@ -1,5 +1,5 @@
 import styles from "./Main.module.css";
-import ProgressRightImg from "/Users/kim-youngho/Desktop/budda/budda/src/img/ProgressRightImg.png";
+import ProgressRightImg from "\Users\문민규\OneDrive\바탕 화면\git\budda\budda\src\img\ProgressRightImg.png";
 function Main() {
   return (
     <div className={styles.container}>
