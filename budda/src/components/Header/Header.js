@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
-import HeaderImg from "\Users\문민규\OneDrive\바탕 화면\git\budda\budda\src\img\HealthyFood.png";
-import HeaderRightImg from "\Users\문민규\OneDrive\바탕 화면\git\budda\budda\src\img\HeaderRightImg.png";
+import HeaderImg from "../../img/HealthyFood.png";
+import HeaderRightImg from "../../img/HeaderRightImg.png";
 
 function Header() {
   return (
