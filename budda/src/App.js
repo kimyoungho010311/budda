@@ -1,17 +1,21 @@
-import "./App.css";
-import NavBarModule from "./components/NavBar/NavBar";
-import Header from "./components/Header/Header";
-import Main from "./components/BestRecipe/Main";
-import Footer from "./components/Footer/Footer";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainPage from "./router/MainPage";
+import RecipePage from "./router/RecipePage";
+import LoginPage from "./router/LoginPage";
+import NotFound from "./router/NotFound";
+
 function App() {
   return (
-    <div className="App">
-      <NavBarModule></NavBarModule>
-      <Header></Header>
-
-      <Main></Main>
-      <Footer></Footer>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/budda" element={<MainPage />} />
+        <Route path="/recipe" element={<RecipePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<NotFound />} />
+        {/* <Route path="/login/signup" element={<SignUpPage />} /> */}
+      </Routes>
+    </Router>
   );
 }
 

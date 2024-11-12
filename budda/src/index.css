@@ -4,6 +4,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: bold;
 }
 
 code {
@@ -11,5 +12,4 @@ code {
     monospace;
 }
 body {
-  height: 300vh;
 }
