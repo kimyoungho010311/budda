@@ -39,8 +39,30 @@ function Main() {
             <p>Cook recipes with simple step-by-step</p> instructions
           </h6>
         </div>
-        <img src={ProgressRightImg} className={styles.ProgressRightImg} />
+        <img
+          src={ProgressRightImg}
+          className={styles.ProgressRightImg}
+          alt="img"
+        />
         <div className={styles.show_progress_btn}></div>
+      </div>
+
+      <h1 className={styles.h1}>Most Populer chefs</h1>
+      <div className={styles.MainList}>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+      </div>
+
+      <h1 className={styles.h1}>Recent veiw recipe</h1>
+      <div className={styles.MainList}>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
+        <div className={styles.MainListEntity}>+</div>
       </div>
     </div>
   );

@@ -23,8 +23,16 @@ function Header() {
             </button>
           </form>
         </div>
-        <img src={HeaderImg} className={styles.Header_bottom_img} />
-        <img src={HeaderRightImg} className={styles.Header_right_img} />
+        <img
+          src={HeaderImg}
+          className={styles.Header_bottom_img}
+          alt={HeaderImg}
+        />
+        <img
+          src={HeaderRightImg}
+          className={styles.Header_right_img}
+          alt={HeaderRightImg}
+        />
       </div>
     </header>
   );

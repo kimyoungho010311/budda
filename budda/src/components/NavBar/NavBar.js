@@ -1,26 +1,42 @@
+import React from "react";
 import styles from "./NavBar.module.css";
+import { Link } from "react-router-dom";
+
 function NavBarModule() {
   return (
     <div className={styles.nav_bar}>
-      <div className={styles.nav_bar_icon}>BUDDA</div>
+      <Link to="/budda" className={styles.nav_bar_icon}>
+        <div>BUDDA</div>
+      </Link>
+
       <div className={styles.nav_bar_menu}>
-        <form>
-          <button className={styles.nav_bar_menu_1}>Home</button>
-          <button className={styles.nav_bar_menu_1}>Recipe</button>
-          <button className={styles.nav_bar_menu_1}>Bundles</button>
-          <button className={styles.nav_bar_menu_1}>Blog</button>
-        </form>
+        <Link to="/budda" className={styles.nav_bar_menu_1}>
+          Home
+        </Link>
+        <Link to="/recipe" className={styles.nav_bar_menu_1}>
+          Recipe
+        </Link>
+        <Link to="/bundles" className={styles.nav_bar_menu_1}>
+          Bundles
+        </Link>
+        <Link to="/blog" className={styles.nav_bar_menu_1}>
+          Blog
+        </Link>
       </div>
+
       <div>
         <form>
           <input placeholder="Search" className={styles.Search} />
         </form>
       </div>
+
       <div className={styles.nav_bar_log}>
-        <form>
-          <button className={styles.nav_bar_log_1}>Log in</button>
-          <button className={styles.nav_bar_log_2}>Sign up</button>
-        </form>
+        <Link to="/login" className={styles.nav_bar_log_1}>
+          Log in
+        </Link>
+        <Link to="/signup" className={styles.nav_bar_log_2}>
+          Sign up
+        </Link>
       </div>
     </div>
   );
