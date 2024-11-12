@@ -44,7 +44,7 @@ const Login = () => {
               placeholder="Password"
             />
             <button className={styles.LoginBtn} onClick={handleSave}>
-              Login
+              Login!
             </button>
           </div>
         </div>
