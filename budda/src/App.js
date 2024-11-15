@@ -8,6 +8,10 @@ import KakaoCallback from "./router/KakaoCallback";
 import NotFound from "./router/NotFound";
 import SignUpPage from "./router/SignUpPage";
 import Logincom from "./router/LoginCom";
+const dbConnect = require("./config/dbConnect");
+
+dbConnect();
+
 function App() {
   useEffect(() => {
     // Kakao SDK가 로드되었는지 확인하고 초기화
