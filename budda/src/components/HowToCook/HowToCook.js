@@ -1,4 +1,4 @@
-import styles from "./HowToCook.module.css";
+// import styles from "./HowToCook.module.css";
 
 function HowToCook() {
   return;
