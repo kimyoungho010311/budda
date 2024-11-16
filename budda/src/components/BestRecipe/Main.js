@@ -1,5 +1,5 @@
 import styles from "./Main.module.css";
-import ProgressRightImg from "../../img/ProgressRightImg.png";
+import ProgressRightImg from "../../asset/img/ProgressRightImg.png";
 function Main() {
   return (
     <div className={styles.container}>

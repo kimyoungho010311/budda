@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
-import HeaderImg from "../../img/HealthyFood.png";
-import HeaderRightImg from "../../img/HeaderRightImg.png";
+import HeaderImg from "../../asset/img/HealthyFood.png";
+import HeaderRightImg from "../../asset/img/HeaderRightImg.png";
 
 function Header() {
   return (

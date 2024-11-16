@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 
 const dbConnect = async () => {
@@ -17,8 +18,28 @@ const dbConnect = async () => {
 dbConnect();
 
 app.get("/api/data", (req, res) => {
+  res.cookie("myCookie", "cookieValue", {
+    sameSite: "None",
+    secure: true, // HTTP 필요
+    httpOnly: true, // 클라이언트에서 접근 불가
+  });
   res.json({ message: "Data from server" });
 });
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+// CORS 설정
+app.use(
+  cors({
+    origin: "http://localhost:3000", //REACT 도메인
+    credentials: true,
+  })
+);
+
+// COOP 및 COEP 설정
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-crop");
+  next();
+});

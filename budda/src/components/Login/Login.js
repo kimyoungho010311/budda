@@ -1,9 +1,21 @@
 import styles from "./Login.module.css";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import {jwtDecode} from "jwt-decode";
 
-const Login = () => {
+function Login() {
+  const navigate = useNavigate(); // navigate 훅 생성함
+  const handleLoginSeccess = (credentialResponse) => {
+    try {
+      const decodedToken = jwtDecode(credentialResponse.credential);
+      console.log("Decoded Token", decodedToken);
+      // 리디렉션 처리함
+      navigate("/login/com")
+    } catch (error) {
+      console.log("Failed to decode Token", error);
+    }
+  };
   return (
     <div className={styles.LoginPage}>
       <div className={styles.Login}>
@@ -14,17 +26,15 @@ const Login = () => {
               Find cooking and share your favorite dishes!
             </p>
           </div>
-          {/* <div>
+          <div>
             <h2>Login</h2>
             <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log("Login Success : ", credentialResponse);
-              }}
+              onSuccess={handleLoginSeccess}
               onError={() => {
                 console.log("Login Failed");
               }}
             />
-          </div> */}
+          </div>
           <div className={styles.LoginInput_div}>
             <Link to="/budda" className={styles.signup}>
               <div>Go to the home</div>
@@ -34,6 +44,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Login;
