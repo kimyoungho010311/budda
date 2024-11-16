@@ -12,7 +12,7 @@ function Login() {
       const decodedToken = jwtDecode(token);
       //복호화된 JWT 토큰을 로컬스토리지에 저장
       localStorage.setItem("accessToken", token);
-
+      console.log("Login Success!");
       console.log("Decoded Token", decodedToken);
       // 리디렉션 처리함
       navigate("/login/com");
