@@ -43,3 +43,9 @@ app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Embedder-Policy", "require-crop");
   next();
 });
+
+//로그아웃 구현
+app.post("/logout", (req, res) => {
+  res.clearCookie("session"); // 세션쿠키 삭제
+  return res, status(200).send("Logged out");
+});
