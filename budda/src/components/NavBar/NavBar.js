@@ -34,11 +34,8 @@ function NavBarModule() {
         <Link
           to="/login"
           className={styles.nav_bar_log_1}
-          onClick={console.log(
-            process.env.REACT_APP_GOOGLE,
-            process.env.REACT_APP_GITHUB,
-            process.env.REACT_APP_GITHUB_CLIENT_SECRETS
-          )}
+
+          
         >
           Log in
         </Link>

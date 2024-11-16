@@ -7,14 +7,11 @@ import NotFound from "./router/NotFound";
 import SignUpPage from "./router/SignUpPage";
 import Logincom from "./router/LoginCom";
 
-// import { GoogleOAuthProvider } from "@react-oauth/google";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
-
-
   return (
-    // <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE}>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE}>
       <Router>
         <Routes>
           <Route path="/budda" element={<MainPage />} />
@@ -22,11 +19,10 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/login/signup" element={<SignUpPage />} />
-          <Route path="/login/com" element={<Logincom />} />         
-
+          <Route path="/login/com" element={<Logincom />} />
         </Routes>
       </Router>
-
+    </GoogleOAuthProvider>
   );
 }
 
