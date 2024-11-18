@@ -1,0 +1,18 @@
+.wrapp-profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.profile-container {
+  background-color: var(--gray);
+  border-radius: 10px;
+  width: 370px;
+  height: 400px;
+  padding: 30px;
+}
+
+.picture {
+  border-radius: 20px;
+}
