@@ -1,5 +1,7 @@
 import styles from "./Main.module.css";
 import ProgressRightImg from "../../asset/img/ProgressRightImg.png";
+import Footer from "../Footer/Footer";
+
 function Main() {
   return (
     <div className={styles.container}>
@@ -64,6 +66,7 @@ function Main() {
         <div className={styles.MainListEntity}>+</div>
         <div className={styles.MainListEntity}>+</div>
       </div>
+      <Footer></Footer>
     </div>
   );
 }
