@@ -1,0 +1,32 @@
+.wrrapFooter {
+  background-color: var(--main-color);
+  height: 200px;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+}
+.footerRight,
+.footerLeft {
+  margin: 20px;
+}
+.footerRight {
+  display: flex;
+}
+.href {
+  color: black;
+  text-decoration: none;
+}
+.giticon,
+.instagram {
+  height: 50px;
+  width: 50px;
+  margin: 5px;
+}
+.kyh,
+.mmk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 10px;
+}

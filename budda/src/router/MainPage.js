@@ -8,6 +8,7 @@ function MainPage() {
       <NavBarModule></NavBarModule>
       <Header></Header>
       <Main></Main>
+
     </div>
   );
 }

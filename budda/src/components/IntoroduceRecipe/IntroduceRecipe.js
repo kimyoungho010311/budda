@@ -1,132 +1,200 @@
-import styles from "./IntroduceRecipe.module.css";
-import React, { useState } from "react";
+import "./IntroduceRecipe.css";
+import React from "react";
+import ReactQuill from "react-quill";
+import useRecipeForm from "../../hooks/useRecipeForm"; // 커스텀 훅 경로
 
 function IntroduceRecipe() {
-  const [image, setImage] = useState(null); // 이미지 상태 추가
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // 이미지 데이터 URL을 상태에 저장
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const {
+    formData,
+    handleFileChange,
+    handleInputChange,
+    addIngredient,
+    removeIngredient,
+    handleIngredientChange,
+    handleStepsChange,
+    handleSubmit,
+  } = useRecipeForm();
 
   return (
-    <div className={styles.recipeInfo}>
-      <div className={styles.recipeInfo_left}>
-        <div className={styles.name}>
-          <p className={styles.nameP}>Name of recipe</p>
+    <div>
+      <div className="recipeInfo">
+        <div className="recipeInfo_left">
+          <div className="name">
+            <p className="nameP">Name of recipe</p>
+            <input
+              type="text"
+              name="recipeName"
+              className="recipeName"
+              size={80}
+              value={formData.recipeName}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="name">
+            <p className="nameP">Introduce recipe</p>
+            <input
+              type="text"
+              name="recipeIntroduction"
+              className="recipeIntroduction"
+              size={80}
+              value={formData.recipeIntroduction}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="name">
+            <p className="nameP">categories</p>
+            <form className="form">
+              <select
+                name="type"
+                value={formData.categories.type}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">종류별</option>
+                <option value="main">메인반찬</option>
+                <option value="soup">국/탕</option>
+                <option value="dessert">디저트</option>
+              </select>
+              <select
+                name="situation"
+                value={formData.categories.situation}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">상황별</option>
+                <option value="daily">일상</option>
+                <option value="diet">다이어트</option>
+              </select>
+              <select
+                name="ingredient"
+                value={formData.categories.ingredient}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">재료별</option>
+                <option value="meat">소고기</option>
+                <option value="vegetable">채소</option>
+              </select>
+            </form>
+          </div>
+          <div className="name">
+            <p className="nameP">Information</p>
+            <form className="form">
+              <p>인원</p>
+              <select
+                name="count"
+                value={formData.info.count}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">인원</option>
+                <option value="one">1인분</option>
+                <option value="two">2인분</option>
+              </select>
+              <p>시간</p>
+              <select
+                name="time"
+                value={formData.info.time}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">시간</option>
+                <option value="10min">10분</option>
+                <option value="20min">20분</option>
+              </select>
+              <p>난이도</p>
+              <select
+                name="difficulty"
+                value={formData.info.difficulty}
+                onChange={handleInputChange}
+                className="select"
+              >
+                <option value="">난이도</option>
+                <option value="easy">쉬움</option>
+                <option value="hard">어려움</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <div className="recipeInfo_right">
+          <label htmlFor="file-input">
+            <img
+              className="recipeInfo_right_img"
+              src={
+                formData.image ||
+                "https://recipe1.ezmember.co.kr/img/pic_none4.gif"
+              }
+              alt="업로드된 이미지"
+            />
+          </label>
           <input
-            type="text"
-            className={styles.nameInput}
-            id={styles.first}
-            size={80}
+            type="file"
+            id="file-input"
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={handleFileChange}
           />
-        </div>
-        <div className={styles.name}>
-          <p className={styles.nameP}>Introduce recipe</p>
-          <input
-            type="text"
-            className={styles.nameInput}
-            size={80}
-            style={{ resize: "none" }}
-          />
-        </div>
-        <div className={styles.name}>
-          <p className={styles.nameP}>categories</p>
-          <form className={styles.form}>
-            <select name="categories" className={styles.select}>
-              <option>종류별</option>
-              <option value={1}>메인반찬</option>
-              <option value={2}>국/탕</option>
-              <option value={3}>찌게</option>
-              <option value={4}>디저트</option>
-              <option value={5}>양식</option>
-              <option value={6}>면</option>
-              <option value={7}>중식</option>
-              <option value={8}>기타</option>
-            </select>
-            <select name="situation" className={styles.select}>
-              <option>상황별</option>
-              <option value={9}>일상</option>
-              <option value={10}>초스피드</option>
-              <option value={11}>손님대접</option>
-              <option value={12}>다이어트</option>
-              <option value={13}>영양식</option>
-              <option value={14}>해장</option>
-            </select>
-            <select name="ingredient" className={styles.select}>
-              <option>재료별</option>
-              <option value={15}>소고기</option>
-              <option value={16}>돼지고기</option>
-              <option value={17}>닭고기</option>
-              <option value={18}>채소</option>
-              <option value={19}>해산물</option>
-              <option value={20}>과일</option>
-            </select>
-          </form>
-        </div>
-        <div className={styles.name}>
-          <p className={styles.nameP}>Information</p>
-          <form className={styles.form}>
-            <p>인원</p>
-            <select name="count" className={styles.select}>
-              <option>인원</option>
-              <option value={"one"}>1인분</option>
-              <option value={"two"}>2인분</option>
-              <option value={"three"}>4인분</option>
-              <option value={"morethan"}>그 이상</option>
-            </select>
-            <p>시간</p>
-            <select name="time" className={styles.select}>
-              <option>시간</option>
-              <option value={"5min"}>5분이내</option>
-              <option value={"10min"}>10분</option>
-              <option value={"20min"}>20분</option>
-              <option value={"30min"}>30분</option>
-              <option value={"40min"}>40분</option>
-              <option value={"50min"}>50분</option>
-              <option value={"overtime"}>그 이상</option>
-            </select>
-            <p>난이도</p>
-            <select name="difficulty" className={styles.select}>
-              <option>난이도</option>
-              <option value={"easy"}>쉬움</option>
-              <option value={"middle"}>중간</option>
-              <option value={"hard"}>어려움</option>
-              <option value={"god"}>신의 경지</option>
-            </select>
-          </form>
         </div>
       </div>
-      <div className={styles.recipeInfo_right} is_over="0">
-        <label htmlFor="file-input">
-          <img
-            id="mainPhotoHolder"
-            src={image || "https://recipe1.ezmember.co.kr/img/pic_none4.gif"}
-            alt="업로드된 이미지"
-            style={{
-              cursor: "pointer",
-              width: "200px",
-
-              height: "200px", // 원하는 높이
-              objectFit: "cover", // 이미지 비율 유지
-              border: "2px solid #ccc", // 테두리 추가 (선택 사항)
-              borderRadius: "8px",
-            }}
-          />
-        </label>
-        <input
-          type="file"
-          id="file-input"
-          style={{ display: "none" }}
-          accept="image/*"
-          onChange={handleFileChange}
+      <div className="IngredientInfo">
+        <div className="Ingredient">
+          <p className="p">Ingredients</p>
+          <button onClick={addIngredient} className="addDiv">
+            Add Ingredients
+          </button>
+        </div>
+        {/* 재료 리스트를 세로로 배치 */}
+        <div className="inputDiv-container">
+          {formData.ingredients.map((ingredient, index) => (
+            <div key={index} className="inputDiv">
+              <input
+                type="text"
+                placeholder="Name"
+                value={ingredient.name}
+                onChange={(e) =>
+                  handleIngredientChange(index, "name", e.target.value)
+                }
+              />
+              <input
+                type="text"
+                placeholder="Quantity"
+                value={ingredient.quantity}
+                onChange={(e) =>
+                  handleIngredientChange(index, "quantity", e.target.value)
+                }
+              />
+              <input
+                type="text"
+                placeholder="Unit"
+                value={ingredient.unit}
+                onChange={(e) =>
+                  handleIngredientChange(index, "unit", e.target.value)
+                }
+              />
+              <input
+                type="text"
+                placeholder="Note"
+                value={ingredient.note}
+                onChange={(e) =>
+                  handleIngredientChange(index, "note", e.target.value)
+                }
+              />
+              <button onClick={() => removeIngredient(index)}>Delete</button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="howToCook">
+        <ReactQuill
+          value={formData.steps}
+          onChange={handleStepsChange}
+          style={{ width: "", height: "600px" }}
         />
+      </div>
+      <div className="wrappSubmitBtn">
+        <button onClick={handleSubmit} className="submitBtn">
+          Submit Recipe
+        </button>
       </div>
     </div>
   );
