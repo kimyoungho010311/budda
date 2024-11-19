@@ -5,7 +5,7 @@ const app = express();
 
 const dbConnect = async () => {
   try {
-    await mongoose.coonect(process.env.DB_COOECT, {
+    await mongoose.connect(process.env.DB_CONNECT, {
       userNewUrlParser: true,
       userUnifiedTopology: true,
     });
