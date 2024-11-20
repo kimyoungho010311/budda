@@ -1,0 +1,49 @@
+.container {
+  height: 500px;
+  margin-top: 50px;
+}
+.h1 {
+  padding-top: 50px;
+  font-size: 45px;
+}
+.MainList {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.MainListEntity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(246, 249, 247);
+  width: 200px;
+  height: 250px;
+  font-size: 70px;
+}
+.show_progress {
+  margin-top: 80px;
+  background-color: rgb(246, 249, 247);
+
+  height: 300px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow: hidden; /* hide overflowing image parts */
+  position: relative;
+}
+.show_progress_content {
+  border-radius: 20px;
+}
+.h4 {
+  font-size: 35px;
+}
+.h6 {
+  font-size: 15px;
+}
+.ProgressRightImg {
+  object-fit: cover; /* scale image to cover the div */
+  position: absolute;
+  top: 200px;
+  left: 1000px;
+  width: 200px;
+}
