@@ -1,4 +1,4 @@
-import styles from "./Login.module.css";
+import "./Login.css";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
@@ -21,12 +21,12 @@ function Login() {
     }
   };
   return (
-    <div className={styles.LoginPage}>
-      <div className={styles.Login}>
-        <div className={styles.Login_form}>
-          <div className={styles.Login_form_top}>
-            <h1 className={styles.Login_form_top_h1}>Welcome to the BUDDA!</h1>
-            <p className={styles.Login_form_top_p}>
+    <div className='LoginPage'>
+      <div className='Login'>
+        <div className='Login_form'>
+          <div className='Login_form_top'>
+            <h1 className='Login_form_top_h1'>Welcome to the BUDDA!</h1>
+            <p className='Login_form_top_p'>
               Find cooking and share your favorite dishes!
             </p>
           </div>
@@ -39,8 +39,8 @@ function Login() {
               }}
             />
           </div>
-          <div className={styles.LoginInput_div}>
-            <Link to="/budda" className={styles.signup}>
+          <div className='LoginInput_div'>
+            <Link to="/budda" className='signup'>
               <div>Go to the home</div>
             </Link>
           </div>

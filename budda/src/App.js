@@ -8,6 +8,8 @@ import NotFound from "./router/NotFound";
 import SignUpPage from "./router/SignUpPage";
 import Logincom from "./router/LoginCom";
 import ProfilePage from "./router/ProfilePage"
+import SearchPage from "./router/SearchPage"
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
@@ -43,6 +45,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <SearchPage/>
               </ProtectedRoute>
             }
           />
