@@ -1,36 +1,36 @@
-import styles from "./Header.module.css";
+import "./Header.css";
 import HeaderImg from "../../asset/img/HealthyFood.png";
 import HeaderRightImg from "../../asset/img/HeaderRightImg.png";
-
+import { Link } from "react-router-dom";
 function Header() {
   return (
-    <header className={styles.Header}>
-      <div className={styles.Header_top}>
-        <h1 className={styles.Header_top_h1}>Cooking fresh, very easy</h1>
-        <h5 className={styles.Header_top_h5}>
+    <header className="Header">
+      <div className="Header_top">
+        <h1 className="Header_top_h1">Cooking fresh, very easy</h1>
+        <h5 className="Header_top_h5">
           Find great recipe, order ingredients, start cooking
         </h5>
       </div>
-      <div className={styles.Header_bottom}>
-        <div className={styles.Header_bottom_div}>
-          <aside className={styles.Header_bottom_aside}>
+      <div className="Header_bottom">
+        <div className="Header_bottom_div">
+          <aside className="Header_bottom_aside">
             Have you ever cooked with turmeric? Today's kiick-off is my overly
             delicious turmeric peanut curry with vegetables and rice noodles
           </aside>
-          <form className={styles.Header_bottom_form}>
-            <button className={styles.Header_bottom_form_btn}>
+          <form className="Header_bottom_form">
+            <Link to="/search" className="Header_bottom_form_btn">
               View recipe now
-            </button>
+            </Link>
           </form>
         </div>
         <img
           src={HeaderImg}
-          className={styles.Header_bottom_img}
+          className="Header_bottom_img"
           alt={HeaderImg}
         />
         <img
           src={HeaderRightImg}
-          className={styles.Header_right_img}
+          className="Header_right_img"
           alt={HeaderRightImg}
         />
       </div>

@@ -4,6 +4,7 @@
   margin-top: 30px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .footerRight,
 .footerLeft {
@@ -11,6 +12,7 @@
 }
 .footerRight {
   display: flex;
+  padding-right: 100px;
 }
 .href {
   color: black;
@@ -28,5 +30,5 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 10px;
+  margin: 30px;
 }

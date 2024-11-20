@@ -1,9 +1,9 @@
-import styles from "./SignUp.module.css";
+import "./SignUp.css";
 
 function SignUp() {
   return (
-    <div className={styles.LoginPage}>
-      <div className={styles.Login}></div>
+    <div className="LoginPage">
+      <div className="Login"></div>
     </div>
   );
 }

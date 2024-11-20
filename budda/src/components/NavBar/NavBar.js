@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./NavBar.module.css";
+import "./NavBar.css";
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "../../util/authUtil";
 import { googleLogout } from "@react-oauth/google";
@@ -29,49 +29,51 @@ function NavBarModule() {
   };
 
   return (
-    <div className={styles.nav_bar}>
-      <Link to="/budda" className={styles.nav_bar_icon}>
+    <div className="nav_bar">
+      <Link to="/budda" className="nav_bar_icon">
         <div>BUDDA</div>
       </Link>
 
-      <div className={styles.nav_bar_menu}>
-        <Link to="/budda" className={styles.nav_bar_menu_1}>
+      <div className="nav_bar_menu">
+        <Link to="/budda" className="nav_bar_menu_1">
           Home
         </Link>
         <Link
           to="/recipe"
-          className={styles.nav_bar_menu_1}
+          className="nav_bar_menu_1"
           onClick={handleRecipeClick}
         >
           Recipe
         </Link>
-        <Link to="/bundles" className={styles.nav_bar_menu_1}>
+        <Link to="/bundles" className="nav_bar_menu_1">
           Bundles
         </Link>
-        <Link to="/blog" className={styles.nav_bar_menu_1}>
+        <Link to="/blog" className="nav_bar_menu_1">
           Blog
         </Link>
       </div>
       <div>
-        <form>
-          <input placeholder="Search" className={styles.Search} />
-        </form>
+        <Link to="/search" className="Search">
+          Search some recipe...
+        </Link>
       </div>
 
-      <div className={styles.nav_bar_log}>
+      <div className="nav_bar_log">
         {isAuthenticated() ? (
-          <div className={styles.warppbtns}>
-            <Link onClick={handleLogout} className={styles.nav_bar_logout}>
+          <div className="warppbtns">
+            <Link onClick={handleLogout} className="nav_bar_logout">
               Log out
             </Link>
-          <Link to='/profile' className={styles.nav_bar_logout}>Profile</Link>
+            <Link to="/profile" className="nav_bar_logout">
+              Profile
+            </Link>
           </div>
         ) : (
           <>
-            <Link to="/login" className={styles.nav_bar_log_1}>
+            <Link to="/login" className="nav_bar_log_1">
               Log in
             </Link>
-            <Link to="/signup" className={styles.nav_bar_log_2}>
+            <Link to="/signup" className="nav_bar_log_z">
               Sign up
             </Link>
           </>

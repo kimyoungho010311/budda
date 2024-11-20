@@ -62,4 +62,8 @@
   border-radius: 20px;
   height: 30px;
   width: 150px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

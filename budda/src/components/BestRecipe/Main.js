@@ -1,72 +1,74 @@
-import styles from "./Main.module.css";
+import "./Main.css";
 import ProgressRightImg from "../../asset/img/ProgressRightImg.png";
 import Footer from "../Footer/Footer";
 
 function Main() {
   return (
-    <div className={styles.container}>
-      <h1 className={styles.h1}>What is the best cooking recipe?</h1>
-      <div className={styles.MainList}>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
+    <div className="container">
+      <h1 className="h1">What is the best cooking recipe?</h1>
+      <div className="MainList">
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
       </div>
-      <h1 className={styles.h1}>Recent created cooking recipe</h1>
-      <div className={styles.MainList}>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
+      <h1 className="h1">Recent created cooking recipe</h1>
+      <div className="MainList">
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
       </div>
-      <div className={styles.show_progress}>
-        <div className={styles.show_progress_content}>
-          <h4 className={styles.h4}>Find recipes</h4>
-          <h6 className={styles.h6}>
-            <p>Choose from numerous recipes for all</p> preferneces and diets
+      <div className="show_progress">
+        <div className="show_progress_content">
+          <h4 className="h4">Find recipes</h4>
+          <h6 className="h6">
+            <p>Choose from numerous recipes for all</p>
+            preferences and diets
           </h6>
         </div>
-        <div className={styles.show_progress_content}>
-          <h4 className={styles.h4}>Order ingredients online</h4>
-          <h6 className={styles.h6}>
-            <p>Partner supermarkets supply the ingredients</p> for the selected
-            recipes at no extra charge
+        <div className="show_progress_content">
+          <h4 className="h4">Order ingredients online</h4>
+          <h6 className="h6">
+            <p>Partner supermarkets supply the ingredients</p>
+            for the selected recipes at no extra charge
           </h6>
         </div>
-        <div className={styles.show_progress_content}>
-          <h4 className={styles.h4}>Cook and enjoy</h4>
-          <h6 className={styles.h6}>
-            <p>Cook recipes with simple step-by-step</p> instructions
+        <div className="show_progress_content">
+          <h4 className="h4">Cook and enjoy</h4>
+          <h6 className="h6">
+            <p>Cook recipes with simple step-by-step</p>
+            instructions
           </h6>
         </div>
         <img
           src={ProgressRightImg}
-          className={styles.ProgressRightImg}
-          alt="img"
+          className="ProgressRightImg"
+          alt="Progress Illustration"
         />
-        <div className={styles.show_progress_btn}></div>
+        <div className="show_progress_btn"></div>
       </div>
 
-      <h1 className={styles.h1}>Most Populer chefs</h1>
-      <div className={styles.MainList}>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
+      <h1 className="h1">Most Popular chefs</h1>
+      <div className="MainList">
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
       </div>
 
-      <h1 className={styles.h1}>Recent veiw recipe</h1>
-      <div className={styles.MainList}>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
-        <div className={styles.MainListEntity}>+</div>
+      <h1 className="h1">Recently viewed recipes</h1>
+      <div className="MainList">
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
+        <div className="MainListEntity">+</div>
       </div>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }
