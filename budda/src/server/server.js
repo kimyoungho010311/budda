@@ -1,51 +1,82 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const ensureJwtSecret = require("./utils/ensureEnvSecret");
+
+ensureJwtSecret();
+
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const User = require("./models/User");
+
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-const dbConnect = async () => {
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// MongoDB 연결
+mongoose
+  .connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+});
+
+// 기본 경로
+app.get("/", (req, res) => {
+  res.status(200).send("Server is running!");
+});
+
+// Google OAuth 엔드포인트
+app.post("/auth/google", async(req, res) => {
+  const { token } = req.body;
+
   try {
-    await mongoose.connect(process.env.DB_CONNECT, {
-      userNewUrlParser: true,
-      userUnifiedTopology: true,
-    });
-    console.log("MongoDB Connected");
-  } catch (err) {
-    console.log("Database connection error : ", err);
-  }
-};
-// 서버 시작 전에 데이터베이스 연결
-dbConnect();
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
 
-app.get("/api/data", (req, res) => {
-  res.cookie("myCookie", "cookieValue", {
-    sameSite: "None",
-    secure: true, // HTTP 필요
-    httpOnly: true, // 클라이언트에서 접근 불가
-  });
-  res.json({ message: "Data from server" });
+      const payload = ticket.getPayload();
+      console.log("Google Payload:", payload);
+
+      // 사용자 정보
+    const user = {
+        googleId: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+      };
+  
+      // 데이터베이스에 저장
+      let existingUser = await User.findOne({ googleId: payload.sub });
+      if (!existingUser) {
+        console.log("Creating new user:", user);
+        existingUser = new User(user);
+        await existingUser.save();
+        console.log("User saved to database:", existingUser);
+      } else {
+        console.log("User already exists in database:", existingUser);
+      }
+      
+      const jwtToken = jwt.sign(
+        { sub: payload.sub, email: payload.email, name: payload.name, picture: payload.picture, family_name: payload.family_name, given_name: payload.given_name },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      
+      res.status(200).json({ success: true, accessToken: jwtToken, message: "Google Auth received" });
+    } catch (error) {
+        console.error("Error verifying Google token:", error);
+    res.status(400).json({ success: false, message: "Invalid token" });
+    }
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
-
-// CORS 설정
-app.use(
-  cors({
-    origin: "http://localhost:3000", //REACT 도메인
-    credentials: true,
-  })
-);
-
-// COOP 및 COEP 설정
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-crop");
-  next();
-});
-
-//로그아웃 구현
-app.post("/logout", (req, res) => {
-  res.clearCookie("session"); // 세션쿠키 삭제
-  return res, status(200).send("Logged out");
-});
+// 서버 시작
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
