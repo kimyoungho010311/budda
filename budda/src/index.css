@@ -1,6 +1,8 @@
-:root{
+:root {
   --btn-hover: rgba(0, 0, 0, 0.7);
-  --gray : rgb(246, 249, 247);
+  --gray: rgb(246, 249, 247);
+  --main-color: rgb(246, 249, 247);
+  --btn-hover: rgba(0, 0, 0, 0.7);
 }
 
 body {
