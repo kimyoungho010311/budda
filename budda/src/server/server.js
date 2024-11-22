@@ -2,31 +2,39 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const ensureJwtSecret = require("./utils/ensureEnvSecret");
-
-ensureJwtSecret();
-
-require("dotenv").config();
-
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const User = require("./models/User");
+const Recipe = require("./models/Recipe");
+const multer = require("multer");
+
+ensureJwtSecret();
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// multer 설정
+const upload = multer({
+  dest: "uploads/",
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB 제한 (선택 사항)
+  },
+});
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true}));
 app.use(express.json());
 
 // MongoDB 연결
 mongoose
-  .connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.DB_CONNECT, { useNewUrlParser: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
     process.exit(1);
-});
+  });
 
 // 기본 경로
 app.get("/", (req, res) => {
@@ -77,6 +85,50 @@ app.post("/auth/google", async(req, res) => {
     res.status(400).json({ success: false, message: "Invalid token" });
     }
 });
+
+// 레시피 저장 엔드포인트
+app.post("/recipes", upload.single("image"), async (req, res) => {
+  try {
+    console.log("Request body:", req.body);
+    console.log("Uploaded file:", req.file);
+    const { recipeName, recipeIntroduction, categories, info, ingredients, steps } = req.body;
+
+    const parsedInfo = JSON.parse(info);
+    const parsedCategories = JSON.parse(categories);
+    const parsedIngredients = JSON.parse(ingredients);
+
+    console.log("Parsed info:", parsedInfo);
+
+    if (!parsedInfo.count || isNaN(parseInt(parsedInfo.count, 10))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid value for 'info.count'. Must be a number.",
+      });
+    }
+
+    const recipe = new Recipe({
+      recipeName,
+      recipeIntroduction,
+      categories: parsedCategories,
+      info: {
+        count: parsedInfo.count,
+        time: parsedInfo.time,
+        difficulty: parsedInfo.difficulty,
+      },
+      ingredients: parsedIngredients,
+      steps,
+      image: req.file ? req.file.path : null,
+    });
+
+    await recipe.save();
+    res.status(201).json({ success: true, message: "Recipe created successfully" });
+  } catch (error) {
+    console.error("Error creating recipe:", error.message);
+    res.status(500).json({ success: false, message: "Failed to create recipe", error: error.message });
+  }
+});
+
+
 
 // 서버 시작
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
