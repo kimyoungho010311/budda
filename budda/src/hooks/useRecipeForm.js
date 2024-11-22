@@ -82,21 +82,44 @@ const useRecipeForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("https://my-backend-api.com/recipes", {
+      const formDataToSend = new FormData();
+  
+      formDataToSend.append("recipeName", formData.recipeName);
+      formDataToSend.append("recipeIntroduction", formData.recipeIntroduction);
+      formDataToSend.append("categories", JSON.stringify(formData.categories));
+      formDataToSend.append("info", JSON.stringify({
+        ...formData.info,
+        count: parseInt(formData.info.count, 10) || 1,
+      }));
+      formDataToSend.append("ingredients", JSON.stringify(formData.ingredients));
+      formDataToSend.append("steps", formData.steps);
+  
+      if (formData.image) {
+        formDataToSend.append("image", formData.image);
+      }
+  
+      console.log("FormData being sent:");
+      for (const pair of formDataToSend.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+  
+      const response = await fetch("http://localhost:5000/recipes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formDataToSend, // Content-Type 헤더 제거
       });
-
+  
       if (response.ok) {
         alert("Recipe submitted successfully!");
       } else {
+        const errorData = await response.json();
+        console.error("Submission failed:", errorData);
         alert("Failed to submit the recipe. :(");
       }
     } catch (error) {
       console.error("Error submitting recipe:", error);
     }
   };
+  
 
   return {
     formData,
