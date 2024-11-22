@@ -30,7 +30,7 @@ function SearchPage() {
   const handleSearch = async () => {
     try {
       // 서버에 필터 데이터 전송
-      const response = await fetch("https://backend-api.com/search", {
+      const response = await fetch("http://localhost:3000", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(filters),
@@ -55,10 +55,10 @@ function SearchPage() {
               value={filters.categories}
               onChange={handleFilterChange}
             >
-              <option value="">category</option>
-              <option value="main">main</option>
-              <option value="soup">soup</option>
-              <option value="dessert">dessert</option>
+              <option value="">종류별</option>
+              <option value="main">메인반찬</option>
+              <option value="soup">국/탕</option>
+              <option value="dessert">디저트</option>
             </select>
           </div>
           <div>
@@ -69,9 +69,9 @@ function SearchPage() {
               value={filters.situation}
               onChange={handleFilterChange}
             >
-              <option value="">situation</option>
-              <option value="daily">daily</option>
-              <option value="diet">diet</option>
+              <option value="">상황별</option>
+              <option value="daily">일상</option>
+              <option value="diet">다이어트</option>
             </select>
           </div>
           <div>
@@ -82,9 +82,9 @@ function SearchPage() {
               value={filters.ingredient}
               onChange={handleFilterChange}
             >
-              <option value="">ingredient</option>
-              <option value="meat">meat</option>
-              <option value="vegetable">vegetable</option>
+              <option value="">재료별</option>
+              <option value="meat">소고기</option>
+              <option value="vegetable">채소</option>
             </select>
           </div>
           <div>
@@ -95,9 +95,9 @@ function SearchPage() {
               value={filters.count}
               onChange={handleFilterChange}
             >
-              <option value="">count</option>
-              <option value="one">For one</option>
-              <option value="two">For two</option>
+              <option value="">인원</option>
+              <option value="one">1인분</option>
+              <option value="two">2인분</option>
             </select>
           </div>
           <div>
@@ -108,9 +108,9 @@ function SearchPage() {
               value={filters.time}
               onChange={handleFilterChange}
             >
-              <option value="">time</option>
-              <option value="10min">10min</option>
-              <option value="20min">20min</option>
+              <option value="">시간</option>
+              <option value="10min">10분</option>
+              <option value="20min">20분</option>
             </select>
           </div>
           <div>
@@ -121,9 +121,9 @@ function SearchPage() {
               value={filters.difficulty}
               onChange={handleFilterChange}
             >
-              <option value="">difficulty</option>
-              <option value="easy">easy</option>
-              <option value="hard">hard</option>
+              <option value="">난이도</option>
+              <option value="easy">쉬움</option>
+              <option value="hard">어려움</option>
             </select>
           </div>
           <button className="searchBtn" onClick={handleSearch}>
