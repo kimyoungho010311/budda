@@ -128,7 +128,38 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
   }
 });
 
+// 검색 엔드포인트
+app.post("/search", async (req, res) => {
+  try {
+    const { categories, situation, ingredient, count, time, difficulty } = req.body;
 
+    // MongoDB 쿼리 작성
+    const query = {};
+
+    if (categories) query["categories.type"] = categories;
+    if (situation) query["categories.situation"] = situation;
+    if (ingredient) query["categories.ingredient"] = ingredient;
+    
+    // 유효한 숫자로 변환
+    if (count && !isNaN(parseInt(count, 10))) {
+      query["info.count"] = parseInt(count, 10);
+    }
+    
+    if (time) query["info.time"] = time;
+    if (difficulty) query["info.difficulty"] = difficulty;
+
+    console.log("Search Query:", query);
+
+    const results = await Recipe.find(query); // MongoDB에서 검색
+    if (results.length === 0) {
+      console.log("No results found");
+    }
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error during search:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch recipes" });
+  }
+});
 
 // 서버 시작
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
