@@ -12,7 +12,7 @@ ensureJwtSecret();
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // multer 설정

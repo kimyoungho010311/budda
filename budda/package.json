@@ -22,7 +22,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "npm-run-all --parallel start:frontend start:backend",
+    "start:frontend": "react-app-rewired start",
+    "start:backend": "nodemon src/server/server.js",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
@@ -53,6 +55,7 @@
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
     "node-polyfill-webpack-plugin": "^4.0.0",
+    "npm-run-all": "^4.1.5",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
