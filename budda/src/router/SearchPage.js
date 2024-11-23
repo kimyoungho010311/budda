@@ -28,13 +28,25 @@ function SearchPage() {
 
   // 검색 버튼 클릭 핸들러
   const handleSearch = async () => {
+    const filtersToSend = {
+      ...filters,
+      count: filters.count ? parseInt(filters.count, 10) : undefined, // 숫자로 변환
+    };
+  
+    console.log("Filters being sent:", filtersToSend);
+
     try {
       // 서버에 필터 데이터 전송
-      const response = await fetch("http://localhost:3000", {
+      const response = await fetch("http://localhost:5000/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(filters),
+        body: JSON.stringify(filtersToSend),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       setResults(data); // 검색 결과 업데이트
     } catch (error) {
@@ -134,8 +146,12 @@ function SearchPage() {
           {results.length > 0 ? (
             results.map((result, index) => (
               <div key={index} className="resultCard">
-                <h3>{result.title}</h3>
-                <p>{result.description}</p>
+                <h3>{result.recipeName}</h3>
+                <p>{result.recipeIntroduction}</p>
+                <p>Type: {result.categories.type}</p>
+                <p>Situation: {result.categories.situation}</p>
+                <p>Time: {result.info.time}</p>
+                <p>Difficulty: {result.info.difficulty}</p>
               </div>
             ))
           ) : (
