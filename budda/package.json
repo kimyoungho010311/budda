@@ -22,7 +22,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm-run-all --parallel start:frontend start:backend",
+    "start": "concurrently --names \"Front,Back\" \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "react-app-rewired start",
     "start:backend": "nodemon src/server/server.js",
     "build": "react-app-rewired build",
@@ -53,6 +53,7 @@
   "devDependencies": {
     "assert": "^2.1.0",
     "buffer": "^6.0.3",
+    "concurrently": "^9.1.0",
     "crypto-browserify": "^3.12.1",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "npm-run-all": "^4.1.5",
