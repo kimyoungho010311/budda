@@ -164,7 +164,7 @@ function SearchPage() {
         <div className="SearchResults">
           {results.length > 0 ? (
             results.map((result, index) => (
-              <Link to={`/recipe/${result._id}`} className="resultCardLink">
+              <Link to={`/recipes/${result._id}`} className="resultCardLink">
                 <div key={index} className="resultCard">
                   <h3>{result.recipeName}</h3>
                   <div className="wrapp_info">
@@ -173,6 +173,7 @@ function SearchPage() {
                       <p>종류 : {result.categories.type}</p>
                       <p>상황 : {result.categories.situation}</p>
                       <p>난이도 : {result.info.difficulty}</p>
+                      <p>단계 : {result.steps}</p>
                     </div>
                     <div className="wrapp_IMG">
                       <div className="IMG">IMG</div>
