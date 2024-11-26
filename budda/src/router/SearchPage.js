@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./SearchPage.css";
 import NavBar from "../components/NavBar/NavBar";
 import Footer from "../components/Footer/Footer";
+import { Link } from "react-router-dom";
 
 function SearchPage() {
   // 검색필터 상태 관리
@@ -32,7 +33,7 @@ function SearchPage() {
       ...filters,
       count: filters.count ? parseInt(filters.count, 10) : undefined, // 숫자로 변환
     };
-  
+
     console.log("Filters being sent:", filtersToSend);
 
     try {
@@ -52,6 +53,21 @@ function SearchPage() {
     } catch (error) {
       console.log("Error fetching search results", error);
     }
+  };
+
+  const handleRefresh = () => {
+    // 검색필터 초기화
+    setFilters({
+      categories: "",
+      situation: "",
+      ingredient: "",
+      count: "",
+      time: "",
+      difficulty: "",
+    });
+
+    // 검색 결과 초기화
+    setResults([]);
   };
 
   return (
@@ -141,22 +157,35 @@ function SearchPage() {
           <button className="searchBtn" onClick={handleSearch}>
             Search
           </button>
+          <button className="searchBtn" onClick={handleRefresh}>
+            Refresh
+          </button>
         </div>
         <div className="SearchResults">
           {results.length > 0 ? (
             results.map((result, index) => (
-              <div key={index} className="resultCard">
-                <h3>{result.recipeName}</h3>
-                <p>{result.recipeIntroduction}</p>
-                <p>Type: {result.categories.type}</p>
-                <p>Situation: {result.categories.situation}</p>
-                <p>Time: {result.info.time}</p>
-                <p>Difficulty: {result.info.difficulty}</p>
-              </div>
+              <Link to={`/recipes/${result._id}`} className="resultCardLink">
+                <div key={index} className="resultCard">
+                  <h3>{result.recipeName}</h3>
+                  <div className="wrapp_info">
+                    <div>
+                      {/* <p>ID : {result._id}</p> */}
+                      <p>종류 : {result.categories.type}</p>
+                      <p>상황 : {result.categories.situation}</p>
+                      <p>난이도 : {result.info.difficulty}</p>
+                      <p>단계 : {result.steps}</p>
+                    </div>
+                    <div className="wrapp_IMG">
+                      <div className="IMG">IMG</div>
+                    </div>
+                  </div>
+                  <p className="p_info">{result.recipeIntroduction}</p>
+                </div>
+              </Link>
             ))
           ) : (
-            <div className="noResults">
-              <p>No results found :(</p>
+            <div className="wrappNoResults">
+              <p className="noResults">No results found :(</p>
             </div>
           )}
         </div>

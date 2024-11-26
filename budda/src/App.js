@@ -7,8 +7,9 @@ import LoginPage from "./router/LoginPage";
 import NotFound from "./router/NotFound";
 import SignUpPage from "./router/SignUpPage";
 import Logincom from "./router/LoginCom";
-import ProfilePage from "./router/ProfilePage"
-import SearchPage from "./router/SearchPage"
+import ProfilePage from "./router/ProfilePage";
+import SearchPage from "./router/SearchPage";
+import RecipeDetail from "./router/RecipeDetail";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -52,10 +53,18 @@ function App() {
             path="/search"
             element={
               <ProtectedRoute>
-                <SearchPage/>
+                <SearchPage />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/recipes/:id"
+            element={
+              <ProtectedRoute>
+                <RecipeDetail />
+              </ProtectedRoute>
+            }
+          ></Route>
         </Routes>
       </Router>
     </GoogleOAuthProvider>
