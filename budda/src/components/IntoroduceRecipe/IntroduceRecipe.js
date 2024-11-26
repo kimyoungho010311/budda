@@ -2,6 +2,7 @@ import "./IntroduceRecipe.css";
 import React from "react";
 import ReactQuill from "react-quill";
 import useRecipeForm from "../../hooks/useRecipeForm"; // 커스텀 훅 경로
+import { Link } from "react-router-dom";
 
 function IntroduceRecipe() {
   const {
@@ -191,11 +192,13 @@ function IntroduceRecipe() {
           style={{ width: "", height: "600px" }}
         />
       </div>
-      <div className="wrappSubmitBtn">
-        <button onClick={handleSubmit} className="submitBtn">
-          Submit Recipe
-        </button>
-      </div>
+      <Link to="/budda">
+        <div className="wrappSubmitBtn">
+          <button onClick={handleSubmit} className="submitBtn">
+            Submit Recipe
+          </button>
+        </div>
+      </Link>
     </div>
   );
 }
