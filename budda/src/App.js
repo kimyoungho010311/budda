@@ -10,7 +10,7 @@ import Logincom from "./router/LoginCom";
 import ProfilePage from "./router/ProfilePage";
 import SearchPage from "./router/SearchPage";
 import RecipeDetail from "./router/RecipeDetail";
-
+import Community from "./router/community/Community";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
@@ -62,6 +62,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <RecipeDetail />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/community"
+            element={
+              <ProtectedRoute>
+                <Community />
               </ProtectedRoute>
             }
           ></Route>

@@ -45,8 +45,8 @@ function NavBarModule() {
         >
           Recipe
         </Link>
-        <Link to="/bundles" className="nav_bar_menu_1">
-          Bundles
+        <Link to="/community" className="nav_bar_menu_1">
+          Community
         </Link>
         <Link to="/blog" className="nav_bar_menu_1">
           Blog
