@@ -1,0 +1,90 @@
+.RecipeDetail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.wrapp_recipe_info {
+  border: solid 1px rgb(246, 249, 247);
+
+  display: flex; /* Flexbox 활성화 */
+  justify-content: center; /* 내부 콘텐츠 수평 가운데 정렬 */
+  align-items: center; /* 내부 콘텐츠 수직 가운데 정렬 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  width: 100%; /* 가로 크기 설정 (선택 사항) */
+  height: auto; /* 높이 자동 조절 */
+}
+
+.wrapp_catgoreis_info {
+  display: flex;
+  width: 100%;
+}
+.categories {
+  border: solid 1px rgb(246, 249, 247);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
+.wrapp_categories_info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: solid 1px rgb(246, 249, 247);
+
+  width: 100%;
+  margin-top: 20px;
+}
+.ingredients {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: solid 1px rgb(246, 249, 247);
+  width: 100%;
+  margin-top: 20px;
+}
+.wrapp_ingredients_index {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  width: 500px;
+}
+.wrapp_ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: solid 1px rgb(246, 249, 247);
+  width: 100%;
+  margin-top: 20px;
+}
+
+.wrapp_recipe_info,
+.categories,
+.wrapp_categories_info,
+.info,
+.ingredients,
+.steps {
+  border-radius: 10px;
+  background-color: rgb(246, 249, 247);
+}

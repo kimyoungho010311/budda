@@ -173,13 +173,12 @@ function SearchPage() {
                       <p>종류 : {result.categories.type}</p>
                       <p>상황 : {result.categories.situation}</p>
                       <p>난이도 : {result.info.difficulty}</p>
-                      <p>단계 : {result.steps}</p>
                     </div>
                     <div className="wrapp_IMG">
                       <div className="IMG">IMG</div>
                     </div>
                   </div>
-                  <p className="p_info">{result.recipeIntroduction}</p>
+                  {/* <p className="p_info">{result.recipeIntroduction}</p> */}
                 </div>
               </Link>
             ))

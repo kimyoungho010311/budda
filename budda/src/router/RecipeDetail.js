@@ -11,6 +11,16 @@ function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleIngredientClick = (ingredientName) => {
+    // 쿠팡 검색 URL 생성
+    const searchUrl = `https://www.coupang.com/np/search?component=&q=${encodeURIComponent(
+      ingredientName
+    )}`;
+
+    // 새 탭에서 URL 열기
+    window.open(searchUrl, "_blank");
+  };
+
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
@@ -42,32 +52,48 @@ function RecipeDetail() {
     <div>
       <NavBar />
       <div className="RecipeDetail">
-        <h1>{recipe.recipeName}</h1>
-        <p>{recipe.recipeIntroduction}</p>
-
-        <div className="categories">
-          <h3>Categories</h3>
-          <p>Type: {recipe.categories?.type}</p>
-          <p>Situation: {recipe.categories?.situation}</p>
-          <p>Ingredient: {recipe.categories?.ingredient}</p>
+        <div className="wrapp_recipe_info">
+          <h1>{recipe.recipeName}</h1>
+          <p>{recipe.recipeIntroduction}</p>
         </div>
 
-        <div className="info">
-          <h3>Info</h3>
-          <p>Count: {recipe.info?.count}</p>
-          <p>Time: {recipe.info?.time}</p>
-          <p>Difficulty: {recipe.info?.difficulty}</p>
+        <div className="wrapp_catgoreis_info">
+          <div className="categories">
+            <h3>Categories</h3>
+            <div className="wrapp_categories_info">
+              <p>Type: {recipe.categories?.type}</p>
+              <p>Situation: {recipe.categories?.situation}</p>
+              <p>Ingredient: {recipe.categories?.ingredient}</p>
+            </div>
+          </div>
+
+          <div className="info">
+            <h3>Info</h3>
+            <div className="info_wrapp_info">
+              <p>Count: {recipe.info?.count}</p>
+              <p>Time: {recipe.info?.time}</p>
+              <p>Difficulty: {recipe.info?.difficulty}</p>
+            </div>
+          </div>
         </div>
 
         <div className="ingredients">
           <h3>Ingredients</h3>
           <ul>
-            {recipe.ingredients?.map((ingredient, index) => (
-              <li key={index}>
-                {ingredient.name} - {ingredient.quantity} {ingredient.unit} (
-                {ingredient.note})
-              </li>
-            ))}
+            <div className="wrapp_ingredients">
+              {recipe.ingredients?.map((ingredient, index) => (
+                <div key={index} className="wrapp_ingredients_index">
+                  {ingredient.name} : {ingredient.quantity} {ingredient.unit}{" "}
+                  {ingredient.note}{" "}
+                  <button
+                    className="ingredient_btn"
+                    onClick={() => handleIngredientClick(ingredient.name)}
+                  >
+                    재료 구매하기
+                  </button>
+                </div>
+              ))}
+            </div>
           </ul>
         </div>
 
