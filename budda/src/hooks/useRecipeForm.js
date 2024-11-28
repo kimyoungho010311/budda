@@ -82,30 +82,20 @@ const useRecipeForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const formDataToSend = new FormData();
-  
-      formDataToSend.append("recipeName", formData.recipeName);
-      formDataToSend.append("recipeIntroduction", formData.recipeIntroduction);
-      formDataToSend.append("categories", JSON.stringify(formData.categories));
-      formDataToSend.append("info", JSON.stringify({
-        ...formData.info,
-        count: parseInt(formData.info.count, 10) || 1,
-      }));
-      formDataToSend.append("ingredients", JSON.stringify(formData.ingredients));
-      formDataToSend.append("steps", formData.steps);
-  
-      if (formData.image) {
-        formDataToSend.append("image", formData.image);
-      }
-  
-      console.log("FormData being sent:");
-      for (const pair of formDataToSend.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
+      const payload = {
+        ...formData,
+        categories: JSON.stringify(formData.categories),
+        info: JSON.stringify(formData.info),
+        ingredients: JSON.stringify(formData.ingredients),
+        image: formData.image, // Base64 이미지 포함
+      };
+
+      console.log("FormData being sent:", payload);
   
       const response = await fetch("http://localhost:5000/recipes", {
         method: "POST",
-        body: formDataToSend, // Content-Type 헤더 제거
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
   
       if (response.ok) {

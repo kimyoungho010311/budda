@@ -175,7 +175,15 @@ function SearchPage() {
                       <p>난이도 : {result.info.difficulty}</p>
                     </div>
                     <div className="wrapp_IMG">
-                      <div className="IMG">IMG</div>
+                      {result.image ? (
+                        <img
+                          src={result.image}
+                          alt={result.recipeName}
+                          style={{ width: "200px", height: "150px", objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div className="IMG">IMG</div>
+                      )}
                     </div>
                   </div>
                   {/* <p className="p_info">{result.recipeIntroduction}</p> */}
