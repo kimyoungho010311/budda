@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
 const multer = require("multer");
@@ -35,7 +36,8 @@ mongoose
 
 // Middleware
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(express.json());
+app.use(bodyParser.json({ limit: "10mb" })); // JSON 데이터 크기 제한
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" })); // URL-encoded 데이터 크기 제한
 
 // Google OAuth2 Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -86,7 +88,7 @@ app.post("/auth/google", async (req, res) => {
 });
 
 // 레시피 저장 API
-app.post("/recipes", upload.single("image"), async (req, res) => {
+app.post("/recipes", async (req, res) => {
   try {
     const {
       recipeName,
@@ -95,10 +97,11 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
       info,
       ingredients,
       steps,
+      image,
     } = req.body;
-    const parsedInfo = JSON.parse(info);
-    const parsedCategories = JSON.parse(categories);
-    const parsedIngredients = JSON.parse(ingredients);
+    const parsedInfo = JSON.parse(info || "{}");
+    const parsedCategories = JSON.parse(categories || "{}");
+    const parsedIngredients = JSON.parse(ingredients || "{}");
 
     const recipe = new Recipe({
       recipeName,
@@ -107,7 +110,7 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
       info: parsedInfo,
       ingredients: parsedIngredients,
       steps,
-      image: req.file ? req.file.path : null,
+      image,
     });
 
     await recipe.save();
@@ -116,7 +119,7 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
       .json({ success: true, message: "Recipe created successfully" });
   } catch (error) {
     console.error("Error saving recipe:", error.message);
-    res.status(500).json({ success: false, message: "Failed to save recipe" });
+    res.status(500).json({ success: false, message: "Failed to save recipe", error: error.message });
   }
 });
 
