@@ -6,6 +6,8 @@ const { OAuth2Client } = require("google-auth-library");
 const multer = require("multer");
 const http = require("http");
 const { Server } = require("socket.io");
+const User = require("./models/User");
+const Recipe = require("./models/Recipe");
 require("dotenv").config();
 
 const app = express();
@@ -128,7 +130,7 @@ app.post("/search", async (req, res) => {
     if (categories) query["categories.type"] = categories;
     if (situation) query["categories.situation"] = situation;
     if (ingredient) query["categories.ingredient"] = ingredient;
-    if (count) query["info.count"] = parseInt(count, 10);
+    if (count) query["info.count"] = count;
     if (time) query["info.time"] = time;
     if (difficulty) query["info.difficulty"] = difficulty;
 

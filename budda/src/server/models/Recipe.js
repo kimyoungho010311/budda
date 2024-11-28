@@ -9,7 +9,7 @@ const recipeSchema = new mongoose.Schema({
     ingredient: { type: String },
   },
   info: {
-    count: { type: Number, default: 1 }, // 기본값 1
+    count: { type: Number }, // 기본값 1
     time: { type: String },
     difficulty: { type: String },
   },
