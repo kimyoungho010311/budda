@@ -89,8 +89,8 @@ function IntroduceRecipe() {
                 className="select"
               >
                 <option value="">인원</option>
-                <option value="one">1인분</option>
-                <option value="two">2인분</option>
+                <option value="1">1인분</option>
+                <option value="2">2인분</option>
               </select>
               <p>시간</p>
               <select
