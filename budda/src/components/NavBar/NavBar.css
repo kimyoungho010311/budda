@@ -33,10 +33,13 @@
   font-weight: bold;
   color: black;
   text-decoration: none;
+
+  transition: transform 0.2s;
 }
 
 .nav_bar_menu_1:hover {
   color: var(--btn-hover);
+  transform: scale(1.15); /* 호버 시 확대 효과 */
 }
 .Search {
   width: 390px;
@@ -48,6 +51,11 @@
   align-items: center;
   text-decoration: none;
   color: gray;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+  transition: transform 0.2s;
+}
+.Search:hover {
+  transform: scale(1.15); /* 호버 시 확대 효과 */
 }
 
 .nav_bar_log {
@@ -59,7 +67,9 @@
   font-size: 20px;
   color: black;
   text-decoration: none;
+  transition: transform 0.2s;
 }
+
 .nav_bar_log_1 {
   background-color: white;
   border: none;
@@ -86,4 +96,5 @@
 }
 .nav_bar_logout:hover {
   color: var(--btn-hover);
+  transform: scale(1.05); /* 호버 시 확대 효과 */
 }

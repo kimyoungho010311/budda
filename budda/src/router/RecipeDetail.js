@@ -56,7 +56,15 @@ function RecipeDetail() {
           <h1>{recipe.recipeName}</h1>
           <p>{recipe.recipeIntroduction}</p>
         </div>
-
+        {recipe.image ? (
+          <img
+            src={recipe.image}
+            alt={recipe.recipeName}
+            className="recipeImage"
+          />
+        ) : (
+          <p>No image available</p>
+        )}
         <div className="wrapp_catgoreis_info">
           <div className="categories">
             <h3>Categories</h3>
@@ -101,16 +109,6 @@ function RecipeDetail() {
           <h3>Steps</h3>
           <div dangerouslySetInnerHTML={{ __html: recipe.steps }} />
         </div>
-
-        {recipe.image ? (
-          <img
-            src={recipe.image}
-            alt={recipe.recipeName}
-            className="recipeImage"
-          />
-        ) : (
-          <p>No image available</p>
-        )}
       </div>
       <HowToUse />
       <Footer />

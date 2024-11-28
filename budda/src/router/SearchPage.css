@@ -2,28 +2,37 @@
   height: 100vh;
   border: solid 5px var(--main-color);
   border-radius: 10px;
+  padding: 20px;
 }
+
 .WrapOptions {
   display: flex;
+  flex-wrap: wrap; /* 작은 화면에서 필터가 줄바꿈되도록 설정 */
   align-items: center;
   justify-content: space-around;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 30px;
+  margin: 30px 10px;
 }
+
 .optionsLabel {
   margin: 10px;
   font-size: 30px;
 }
+
 .optionsSelect {
   font-size: 30px;
   border-radius: 10px;
 }
+
 .searchBtn {
   font-size: 30px;
   border-radius: 10px;
   border: solid 1px var(--main-color);
   margin-right: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+  transition: transform 0.2s;
+}
+.searchBtn:hover {
+  transform: scale(1.05); /* 호버 시 확대 효과 */
 }
 .wrappNoResults {
   display: flex;
@@ -34,37 +43,52 @@
 }
 
 .SearchResults {
-  display: flex;
-  align-items: center;
-  justify-content: left;
+  display: grid; /* Grid로 변경 */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* 반응형 열 조정 */
+  gap: 50px; /* 카드 간격 */
+  margin: 30px auto;
+  width: 90%; /* 전체 너비 조정 */
 }
+
 .resultCard {
   border: 1px solid black;
   border-radius: 10px;
-  margin-top: 50px;
-  width: 300px;
-  height: 300px;
-  padding-left: 10px;
+  margin-top: 30px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: #fff; /* 카드 배경색 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+  transition: transform 0.2s;
+  height: 250px;
 }
+
+.resultCard:hover {
+  transform: scale(1.05); /* 호버 시 확대 효과 */
+}
+
 .p_info {
   display: flex;
 }
+
 .resultCardLink {
   color: black;
   text-decoration: none;
-  margin-left: 60px;
 }
+
 .wrapp_info {
   display: flex;
   justify-content: space-between;
-}
-.IMG {
-  background-color: pink;
-  width: 100px;
-  height: 120px;
-  border-radius: 10%;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  margin-right: 20px;
+}
+
+.result_IMG {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: solid 1px black;
 }
