@@ -88,3 +88,10 @@
   border-radius: 10px;
   background-color: rgb(246, 249, 247);
 }
+
+.recipeImage {
+  width: 700px;
+  height: 300px;
+  border-radius: 10px;
+  padding-top: 20px;
+}

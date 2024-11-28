@@ -179,7 +179,7 @@ function SearchPage() {
                         <img
                           src={result.image}
                           alt={result.recipeName}
-                          style={{ width: "200px", height: "150px", objectFit: "cover" }}
+                          className="result_IMG"
                         />
                       ) : (
                         <div className="IMG">IMG</div>
