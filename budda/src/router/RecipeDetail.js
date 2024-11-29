@@ -110,6 +110,10 @@ function RecipeDetail() {
           <div dangerouslySetInnerHTML={{ __html: recipe.steps }} />
         </div>
       </div>
+      <div className="wrapp_btns">
+        <button className="btn">Delete</button>
+        <button className="btn">Update</button>
+      </div>
       <HowToUse />
       <Footer />
     </div>

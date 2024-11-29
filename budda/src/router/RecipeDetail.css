@@ -95,3 +95,42 @@
   border-radius: 10px;
   padding-top: 20px;
 }
+
+.wrapp_btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 30px;
+}
+
+.btn {
+  margin: 20px;
+  width: 100px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bolder;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+}
+
+.btn:hover {
+  transform: scale(1.15);
+}
+
+.ingredient_btn {
+  margin: 20px;
+  width: 100px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bolder;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+  transition: transform 0.2s;
+}
+
+.ingredient_btn:hover {
+  transform: scale(1.15);
+}

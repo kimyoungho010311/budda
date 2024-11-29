@@ -168,12 +168,6 @@ function SearchPage() {
                 <div key={index} className="resultCard">
                   <h3>{result.recipeName}</h3>
                   <div className="wrapp_info">
-                    <div>
-                      {/* <p>ID : {result._id}</p> */}
-                      <p>종류 : {result.categories.type}</p>
-                      <p>상황 : {result.categories.situation}</p>
-                      <p>난이도 : {result.info.difficulty}</p>
-                    </div>
                     <div className="wrapp_IMG">
                       {result.image ? (
                         <img
@@ -186,7 +180,6 @@ function SearchPage() {
                       )}
                     </div>
                   </div>
-                  {/* <p className="p_info">{result.recipeIntroduction}</p> */}
                 </div>
               </Link>
             ))
