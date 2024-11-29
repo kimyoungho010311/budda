@@ -9,6 +9,7 @@ function Footer() {
         <p>© 2024 BUUDA All rights reserved.</p>
         <p>123 Dongdaero, Gyeongju, Gyeongbuk, 780-714, Dongguk university </p>
         <p>Email : ohhunmi24@gmail.com</p>
+        <p>Email : mmk622@naver.com</p>
       </div>
       <div className="footerRight">
         <div className="kyh">
