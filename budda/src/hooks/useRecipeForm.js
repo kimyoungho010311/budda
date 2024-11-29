@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // jwt-decode 패키지 사용
+import { useState } from "react";
 
 const useRecipeForm = () => {
   const [formData, setFormData] = useState({
@@ -11,21 +10,6 @@ const useRecipeForm = () => {
     steps: "", // 조리 과정 (Quill 에디터에서 입력된 데이터)
     image: null, // 업로드된 이미지
   });
-
-  const [googleId, setGoogleId] = useState(null);
-
-  // Google ID 가져오기
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken"); // localStorage에서 accessToken 가져오기
-    if (token) {
-      try {
-        const decoded = jwtDecode(token); // JWT 디코딩
-        setGoogleId(decoded.googleId); // googleId 설정
-      } catch (error) {
-        console.error("Failed to decode JWT:", error);
-      }
-    }
-  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -98,14 +82,14 @@ const useRecipeForm = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!googleId) {
-        alert("User ID not found. Please log in.");
+      const token = localStorage.getItem("token"); // JWT 토큰 가져오기
+      if (!token) {
+        alert("로그인 상태를 확인해주세요.");
         return;
       }
 
       const payload = {
         ...formData,
-        googleId, // Google ID 추가
         categories: JSON.stringify(formData.categories),
         info: JSON.stringify(formData.info),
         ingredients: JSON.stringify(formData.ingredients),
@@ -116,7 +100,10 @@ const useRecipeForm = () => {
 
       const response = await fetch("http://localhost:5000/recipes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 추가
+        },
         body: JSON.stringify(payload),
       });
 
@@ -134,7 +121,6 @@ const useRecipeForm = () => {
 
   return {
     formData,
-    googleId,
     handleFileChange,
     handleInputChange,
     addIngredient,
