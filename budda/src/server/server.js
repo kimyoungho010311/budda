@@ -97,22 +97,10 @@ app.post("/auth/google", async (req, res) => {
     res.status(400).json({ success: false, message: "Invalid token" });
   }
 });
+
 // 레시피 저장 API
 app.post("/recipes", async (req, res) => {
   try {
-    // 클라이언트로부터 전달된 JWT 토큰
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ success: false, message: "No token provided" });
-    }
-
-    // JWT 디코딩 및 사용자 ID 추출
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.googleId; // JWT에서 googleId 추출
-    console.log(c.green("Decoded User ID:"), userId);
-
     const {
       recipeName,
       recipeIntroduction,
@@ -121,7 +109,14 @@ app.post("/recipes", async (req, res) => {
       ingredients,
       steps,
       image,
+      googleId, // Google ID 수신
     } = req.body;
+
+    if (!googleId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required." });
+    }
 
     const parsedInfo = JSON.parse(info || "{}");
     const parsedCategories = JSON.parse(categories || "{}");
@@ -135,7 +130,7 @@ app.post("/recipes", async (req, res) => {
       ingredients: parsedIngredients,
       steps,
       image,
-      userId, // 레시피에 사용자 ID 추가
+      userId: googleId, // Google ID를 userId로 저장
     });
 
     await recipe.save();
