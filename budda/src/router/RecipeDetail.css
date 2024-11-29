@@ -134,3 +134,7 @@
 .ingredient_btn:hover {
   transform: scale(1.15);
 }
+
+.userProfileImage {
+  border-radius: 20px;
+}

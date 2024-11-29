@@ -3,50 +3,78 @@ import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar/NavBar";
 import Footer from "../components/Footer/Footer";
 import HowToUse from "../components/HowToUse/HowToUse";
+import { jwtDecode } from "jwt-decode";
 import "./RecipeDetail.css";
 
 function RecipeDetail() {
-  const { id } = useParams(); // URL에서 레시피 ID 가져옴
+  const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   const handleIngredientClick = (ingredientName) => {
-    // 쿠팡 검색 URL 생성
     const searchUrl = `https://www.coupang.com/np/search?component=&q=${encodeURIComponent(
       ingredientName
     )}`;
-
-    // 새 탭에서 URL 열기
     window.open(searchUrl, "_blank");
   };
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/recipes/${id}`, {
-          method: "GET", // GET 요청
-          headers: { "Content-Type": "application/json" },
-        });
-
+        const response = await fetch(`http://localhost:5000/recipes/${id}`);
         if (!response.ok) {
-          throw new Error(`Failed to fetch recipes: ${response.status}`);
+          throw new Error(`Failed to fetch recipe: ${response.status}`);
         }
-        const data = await response.json();
-        setRecipe(data);
+        const recipeData = await response.json();
+        setRecipe(recipeData);
+
+        if (recipeData.userId) {
+          const userResponse = await fetch(
+            `http://localhost:5000/user/${recipeData.userId}`
+          );
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            setUserInfo(userData.user);
+          }
+        }
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
-      console.log("Recipe ID : ", id);
     };
     fetchRecipe();
   }, [id]);
 
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/recipes/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        alert("Recipe deleted successfully");
+        window.location.href = "/";
+      } else {
+        alert("Failed to delete recipe");
+      }
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
+  const handleUpdate = () => {
+    alert("Update feature is not implemented yet.");
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error}</p>;
   if (!recipe) return <p>No recipe found</p>;
+
+  const currentUserGoogleId =
+    localStorage.getItem("token") &&
+    jwtDecode(localStorage.getItem("token")).googleId;
 
   return (
     <div>
@@ -55,6 +83,16 @@ function RecipeDetail() {
         <div className="wrapp_recipe_info">
           <h1>{recipe.recipeName}</h1>
           <p>{recipe.recipeIntroduction}</p>
+          {userInfo && (
+            <div className="userInfo">
+              <img
+                src={userInfo.picture}
+                alt={`${userInfo.name}'s profile`}
+                className="userProfileImage"
+              />
+              <p>작성자: {userInfo.name}</p>
+            </div>
+          )}
         </div>
         {recipe.image ? (
           <img
@@ -111,8 +149,16 @@ function RecipeDetail() {
         </div>
       </div>
       <div className="wrapp_btns">
-        <button className="btn">Delete</button>
-        <button className="btn">Update</button>
+        {currentUserGoogleId === recipe.userId && (
+          <>
+            <button className="btn" onClick={handleDelete}>
+              Delete
+            </button>
+            <button className="btn" onClick={handleUpdate}>
+              Update
+            </button>
+          </>
+        )}
       </div>
       <HowToUse />
       <Footer />

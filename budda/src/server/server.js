@@ -74,7 +74,7 @@ app.post("/auth/google", async (req, res) => {
       name: payload.name,
       picture: payload.picture,
     };
-
+    console.log(c.green(JSON.stringify(payload, null, 2))); // JSON 형식으로 payload 출력
     console.log(c.cyan("Google ID (googleId):"), payload.sub); // googleId 출력
 
     let existingUser = await User.findOne({ googleId: payload.sub });
@@ -186,18 +186,39 @@ app.get("/recipes/:id", async (req, res) => {
 });
 
 // Socket.IO 이벤트 처리
-
 io.on("connection", (socket) => {
-  console.log(c.green("사용자가 연결되었습니다."));
+  console.log("사용자가 연결되었습니다.");
 
   socket.on("message", (msg) => {
-    console.log("메시지 수신: ", msg);
-    io.emit("message", msg); // 모든 클라이언트에 메시지 전달
+    console.log("서버에서 받은 메시지:", msg);
+    socket.broadcast.emit("message", msg); // 메시지를 다른 클라이언트에게 전달
   });
 
   socket.on("disconnect", () => {
     console.log("사용자가 연결을 종료했습니다.");
   });
+});
+
+// 사용자 정보 조회 API
+app.get("/user/:googleId", async (req, res) => {
+  const { googleId } = req.params;
+
+  try {
+    const user = await User.findOne({ googleId }); // googleId로 사용자 검색
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user information",
+      error: error.message,
+    });
+  }
 });
 
 // 서버 시작
