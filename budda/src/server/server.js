@@ -9,7 +9,11 @@ const http = require("http");
 const { Server } = require("socket.io");
 const User = require("./models/User");
 const Recipe = require("./models/Recipe");
+
 require("dotenv").config();
+
+// ansi-colors
+const c = require("ansi-colors");
 
 const app = express();
 const server = http.createServer(app); // HTTP 서버 생성
@@ -168,7 +172,7 @@ app.get("/recipes/:id", async (req, res) => {
 // Socket.IO 이벤트 처리
 
 io.on("connection", (socket) => {
-  console.log("사용자가 연결되었습니다.");
+  console.log(c.green("사용자가 연결되었습니다."));
 
   socket.on("message", (msg) => {
     console.log("메시지 수신: ", msg);
@@ -182,8 +186,13 @@ io.on("connection", (socket) => {
 
 // 서버 시작
 server.listen(PORT, () => {
-  console.log(`========================================================`);
-  console.log(`========================================================`);
+  console.log();
+  console.log(
+    c.red(`=============================================================`)
+  );
+  console.log(
+    c.red(`=============================================================`)
+  );
   console.log(`JWT_SECTE :`, process.env.JWT_SECRET);
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
 });

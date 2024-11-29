@@ -91,13 +91,13 @@ const useRecipeForm = () => {
       };
 
       console.log("FormData being sent:", payload);
-  
+
       const response = await fetch("http://localhost:5000/recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok) {
         alert("Recipe submitted successfully!");
       } else {
@@ -109,7 +109,6 @@ const useRecipeForm = () => {
       console.error("Error submitting recipe:", error);
     }
   };
-  
 
   return {
     formData,
