@@ -9,7 +9,11 @@ const http = require("http");
 const { Server } = require("socket.io");
 const User = require("./models/User");
 const Recipe = require("./models/Recipe");
+
 require("dotenv").config();
+
+// ansi-colors
+const c = require("ansi-colors");
 
 const app = express();
 const server = http.createServer(app); // HTTP 서버 생성
@@ -71,6 +75,8 @@ app.post("/auth/google", async (req, res) => {
       picture: payload.picture,
     };
 
+    console.log(c.cyan("Google ID (googleId):"), payload.sub); // googleId 출력
+
     let existingUser = await User.findOne({ googleId: payload.sub });
     if (!existingUser) {
       existingUser = new User(user);
@@ -80,7 +86,12 @@ app.post("/auth/google", async (req, res) => {
     const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.status(200).json({ success: true, accessToken: jwtToken });
+
+    res.status(200).json({
+      success: true,
+      accessToken: jwtToken,
+      googleId: payload.sub, // 응답에 googleId 포함
+    });
   } catch (error) {
     console.error("Error during Google Auth:", error.message);
     res.status(400).json({ success: false, message: "Invalid token" });
@@ -98,7 +109,15 @@ app.post("/recipes", async (req, res) => {
       ingredients,
       steps,
       image,
+      googleId, // Google ID 수신
     } = req.body;
+
+    if (!googleId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required." });
+    }
+
     const parsedInfo = JSON.parse(info || "{}");
     const parsedCategories = JSON.parse(categories || "{}");
     const parsedIngredients = JSON.parse(ingredients || "{}");
@@ -111,6 +130,7 @@ app.post("/recipes", async (req, res) => {
       ingredients: parsedIngredients,
       steps,
       image,
+      userId: googleId, // Google ID를 userId로 저장
     });
 
     await recipe.save();
@@ -119,7 +139,11 @@ app.post("/recipes", async (req, res) => {
       .json({ success: true, message: "Recipe created successfully" });
   } catch (error) {
     console.error("Error saving recipe:", error.message);
-    res.status(500).json({ success: false, message: "Failed to save recipe", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to save recipe",
+      error: error.message,
+    });
   }
 });
 
@@ -164,7 +188,7 @@ app.get("/recipes/:id", async (req, res) => {
 // Socket.IO 이벤트 처리
 
 io.on("connection", (socket) => {
-  console.log("사용자가 연결되었습니다.");
+  console.log(c.green("사용자가 연결되었습니다."));
 
   socket.on("message", (msg) => {
     console.log("메시지 수신: ", msg);
@@ -178,5 +202,13 @@ io.on("connection", (socket) => {
 
 // 서버 시작
 server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log();
+  console.log(
+    c.red(`=============================================================`)
+  );
+  console.log(
+    c.red(`=============================================================`)
+  );
+  console.log(`JWT_SECTE :`, process.env.JWT_SECRET);
+  console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
 });

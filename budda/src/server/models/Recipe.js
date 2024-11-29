@@ -23,6 +23,7 @@ const recipeSchema = new mongoose.Schema({
   ],
   steps: { type: String },
   image: { type: String }, // 이미지 URL 또는 경로
+  userId: { type: String, required: true }, // 사용자 ID 필드 추가
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);

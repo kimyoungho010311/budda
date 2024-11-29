@@ -73,9 +73,7 @@ function NavBarModule() {
             <Link to="/login" className="nav_bar_log_1">
               Log in
             </Link>
-            <Link to="/signup" className="nav_bar_log_z">
-              Sign up
-            </Link>
+
           </>
         )}
       </div>
