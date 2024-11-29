@@ -119,7 +119,11 @@ app.post("/recipes", async (req, res) => {
       .json({ success: true, message: "Recipe created successfully" });
   } catch (error) {
     console.error("Error saving recipe:", error.message);
-    res.status(500).json({ success: false, message: "Failed to save recipe", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to save recipe",
+      error: error.message,
+    });
   }
 });
 
@@ -178,5 +182,8 @@ io.on("connection", (socket) => {
 
 // 서버 시작
 server.listen(PORT, () => {
+  console.log(`========================================================`);
+  console.log(`========================================================`);
+  console.log(`JWT_SECTE :`, process.env.JWT_SECRET);
   console.log(`Server running at http://localhost:${PORT}`);
 });

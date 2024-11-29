@@ -5,7 +5,7 @@ import MainPage from "./router/MainPage";
 import RecipePage from "./router/RecipePage";
 import LoginPage from "./router/LoginPage";
 import NotFound from "./router/NotFound";
-import SignUpPage from "./router/SignUpPage";
+
 import Logincom from "./router/LoginCom";
 import ProfilePage from "./router/ProfilePage";
 import SearchPage from "./router/SearchPage";
@@ -21,7 +21,6 @@ function App() {
           {/* 로그인 없이 접근 가능한 페이지 */}
           <Route path="/budda" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/login/signup" element={<SignUpPage />} />
           <Route path="*" element={<NotFound />} />
 
           {/* 로그인해야 접근 가능한 페이지 */}

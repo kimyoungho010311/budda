@@ -33,13 +33,7 @@ function ProfilePage() {
                 <strong>E-mail:</strong> {userInfo.email}
               </p>
               <p>
-                <strong>First-name:</strong> {userInfo.family_name}
-              </p>
-              <p>
-                <strong>Last-name:</strong> {userInfo.given_name}
-              </p>
-              <p>
-                <strong>Google ID:</strong> {userInfo.sub}
+                <strong>Google ID:</strong> {userInfo.googleId}
               </p>
             </div>
           </div>

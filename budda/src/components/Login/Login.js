@@ -47,7 +47,7 @@ function Login() {
               Find cooking and share your favorite dishes!
             </p>
           </div>
-          <div>
+          <div className="wrapp_login">
             <h2>Login</h2>
             <GoogleLogin
               onSuccess={handleLoginSeccess}
