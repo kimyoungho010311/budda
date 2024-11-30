@@ -82,7 +82,7 @@ const useRecipeForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem("token"); // JWT 토큰 가져오기
+      const token = localStorage.getItem("accessToken"); // JWT 토큰 가져오기
       if (!token) {
         alert("로그인 상태를 확인해주세요.");
         return;
