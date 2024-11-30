@@ -41,6 +41,7 @@ mongoose
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(bodyParser.json({ limit: "10mb" })); // JSON 데이터 크기 제한
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" })); // URL-encoded 데이터 크기 제한
+
 // JWT 인증
 const jwtAuthMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -62,6 +63,22 @@ const jwtAuthMiddleware = (req, res, next) => {
     res
       .status(403)
       .json({ success: false, message: "Invalid or expired token" });
+  }
+};
+
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "토큰이 필요합니다." });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증
+    req.user = decoded; // 사용자 정보 저장
+    next();
+  } catch (error) {
+    res.status(403).json({ message: "유효하지 않은 토큰입니다." });
   }
 };
 
@@ -257,7 +274,10 @@ app.get("/recipes/:id", async (req, res) => {
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-    res.json(recipe);
+    res.json({
+      ...recipe._doc, // Spread the recipe document
+      likes: recipe.likes || [], // Ensure likes is an array
+    });
   } catch (error) {
     console.error(c.red(`Error fetching recipe: ${error.message}`));
     res.status(500).json({ message: "Failed to fetch recipe" });
@@ -315,39 +335,46 @@ server.listen(PORT, () => {
   console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
 });
 
-// 좋아요 토클 API
-app.post("/recipes/:id/like", jwtAuthMiddleware, async (req, res) => {
-  try {
-    const recipeId = req.params.id;
-    const userId = req.user.userId; // JWT에서 가져온 사용자 ID
+// 좋아요 기능 API
+app.post("/recipes/:id/like", verifyToken, async (req, res) => {
+  const { userId } = req.body; // 요청 바디에서 사용자 ID를 가져옴
+  const { id } = req.params; // 게시글 ID
 
-    const recipe = await Recipe.findById(recipeId);
+  console.log("좋아요 요청 수신:");
+  console.log("레시피 ID:", id);
+  console.log("UserID:", userId);
+
+  try {
+    const recipe = await Recipe.findById(id);
+
     if (!recipe) {
-      return res.status(404).json({ message: "Recipe not found" });
+      return res.status(404).json({ success: false, message: "Recipe not found" });
     }
 
-    // 이미 좋아요를 눌렀는지 확인
-    const userIndex = recipe.likedBy.indexOf(userId);
+    // likes 필드가 배열인지 확인 및 초기화
+    if (!Array.isArray(recipe.likes)) {
+      recipe.likes = [];
+    }
 
-    if (userIndex === -1) {
-      // 좋아요 추가
-      recipe.likedBy.push(userId);
-      recipe.likes += 1;
+    // 사용자가 이미 좋아요를 눌렀는지 확인
+    const alreadyLiked = recipe.likes.includes(userId);
+    if (alreadyLiked) {
+      recipe.likes = recipe.likes.filter((like) => like !== userId); // 좋아요 취소
     } else {
-      // 좋아요 제거
-      recipe.likedBy.splice(userIndex, 1);
-      recipe.likes -= 1;
+      recipe.likes.push(userId); // 좋아요 추가
     }
 
     await recipe.save();
+
     res.status(200).json({
-      success: true,
-      likes: recipe.likes,
-      likedBy: recipe.likedBy,
+      likes: recipe.likes.length,
+      hasLiked: recipe.likes.includes(userId),
     });
   } catch (error) {
     console.error(c.red("Error toggling like:", error.message));
     res.status(500).json({ success: false, message: "Failed to toggle like" });
+    console.error("Error updating likes:", error.message);
+    res.status(500).json({ success: false, message: "Failed to update likes" });
   }
 });
 
