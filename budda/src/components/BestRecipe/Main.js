@@ -6,8 +6,21 @@ import { Link } from "react-router-dom";
 
 function Main() {
   const [recentRecipes, setRecentRecipes] = useState([]);
+  const [popularRecipes, setPopularRecipes] = useState([]);
 
   useEffect(() => {
+    const fetchPopularRecipes = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/recipes/popular");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch popular recipes: ${response.status}`);
+        }
+        const data = await response.json();
+        setPopularRecipes(data);
+      } catch (err) {
+        console.error("Error fetching recent recipes");
+      }
+    };
     const fetchRecentRecipes = async () => {
       try {
         const response = await fetch("http://localhost:5000/recipes/recent");
@@ -21,6 +34,7 @@ function Main() {
       }
     };
 
+    fetchPopularRecipes();
     fetchRecentRecipes();
   }, []);
 
@@ -32,11 +46,26 @@ function Main() {
     <div className="container">
       <h1 className="h1">What is the best cooking recipe?</h1>
       <div className="MainList">
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
+      {popularRecipes.length > 0 ? (
+          popularRecipes.map((recipe) => (
+            <Link
+              to={`/recipes/${recipe._id}`}
+              key={recipe._id}
+              className="MainListEntity"
+            >
+              <div className="RecipeCard">
+                <img
+                  src={getSafeImage(recipe.image)}
+                  alt={recipe.recipeName}
+                  className="RecipeCardImage"
+                />
+                <p className="RecipeCardName">{recipe.recipeName}</p>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p>Loading recent recipes...</p>
+        )}
       </div>
       <h1 className="h1">Recent created cooking recipe</h1>
       <div className="MainList">

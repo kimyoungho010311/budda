@@ -141,6 +141,24 @@ app.post("/auth/google", async (req, res) => {
   }
 });
 
+// 좋아요가 많은 레시피 API
+app.get("/recipes/popular", async (req, res) => {
+  try {
+    const recipes = await Recipe.find({})
+      .sort({ "likes": -1 }) // 좋아요순 정렬
+      .limit(5); // 최근 5개의 레시피만 반환
+
+    res.status(200).json(recipes);
+  } catch (error) {
+    console.error(c.red(`Error fetching recent recipes: ${error.message}`));
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch recent recipes",
+      error: error.message,
+    });
+  }
+});
+
 // 최근 생성된 레시피 API
 app.get("/recipes/recent", async (req, res) => {
   try {
