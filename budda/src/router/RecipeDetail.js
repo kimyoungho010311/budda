@@ -69,7 +69,7 @@ function RecipeDetail() {
   };
 
   const handleUpdate = () => {
-    alert("Update feature is not implemented yet.");
+    navigate(`/recipes/edit/${id}`, { state: { recipe } }); // 수정 페이지로 이동
   };
 
   if (loading) return <p>Loading...</p>;
