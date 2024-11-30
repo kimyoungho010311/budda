@@ -91,7 +91,7 @@ function Community() {
                 <img
                   src={userInfo.picture}
                   alt={`${userInfo.name}'s profile`}
-                  className="userProfileImage"
+                  className="userProfileImage_community"
                 />
               )}
               {msg.self ? `${userInfo.name} : ${msg.text}` : ` ${msg.text}`}

@@ -121,7 +121,7 @@
 
 .ingredient_btn {
   margin: 20px;
-  width: 100px;
+  width: auto;
   height: 30px;
   border-radius: 10px;
   border: none;
@@ -137,4 +137,11 @@
 
 .userProfileImage {
   border-radius: 20px;
+}
+
+.userInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }

@@ -8,7 +8,7 @@ import "./RecipeDetail.css";
 import { useNavigate } from "react-router-dom";
 
 function RecipeDetail() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,7 +51,7 @@ function RecipeDetail() {
   }, [id]);
 
   const handleDelete = async () => {
-    if (window.confirm("레시피를 삭제하시겠습니까?")){
+    if (window.confirm("레시피를 삭제하시겠습니까?")) {
       try {
         const response = await fetch(`http://localhost:5000/recipes/${id}`, {
           method: "DELETE",
@@ -80,6 +80,38 @@ function RecipeDetail() {
     localStorage.getItem("token") &&
     jwtDecode(localStorage.getItem("token")).sub;
 
+  const handleLikeToggle = async () => {
+    const currentUserGoogleId =
+      localStorage.getItem("token") &&
+      jwtDecode(localStorage.getItem("token")).sub;
+
+    if (!currentUserGoogleId) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/recipes/${id}/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.ok) {
+        const updatedData = await response.json();
+        setRecipe((prevRecipe) => ({
+          ...prevRecipe,
+          likes: updatedData.likes,
+        }));
+      } else {
+        console.error("Failed to toggle like");
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
+
   return (
     <div>
       <NavBar />
@@ -94,7 +126,7 @@ function RecipeDetail() {
                 alt={`${userInfo.name}'s profile`}
                 className="userProfileImage"
               />
-              <p>작성자: {userInfo.name}</p>
+              <h3>{userInfo.name}</h3>
             </div>
           )}
         </div>
@@ -163,6 +195,9 @@ function RecipeDetail() {
             </button>
           </>
         )}
+      </div>
+      <div className="like-btn">
+        <button onClick={handleLikeToggle}>👍 Like {recipe.likes || 0}</button>
       </div>
       <HowToUse />
       <Footer />
