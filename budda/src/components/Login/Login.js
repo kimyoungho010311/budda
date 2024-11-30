@@ -17,9 +17,12 @@ function Login() {
         return;
       }
 
-      const decodedToken = jwtDecode(token);
-      //복호화된 JWT 토큰을 로컬스토리지에 저장
-      console.log("Decoded Token:", decodedToken);
+      try {
+        const decodedToken = localStorage.getItem("token") && jwtDecode(localStorage.getItem("token"));
+        console.log("Decoded Token:", decodedToken);
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+      }
 
       const response = await sendGoogleToken(token);
   
@@ -27,6 +30,7 @@ function Login() {
         console.log("Server Response:", response);
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("user", JSON.stringify(response.user));
+        localStorage.setItem("token", token);
   
         console.log("Login Success! Redirecting...");
         navigate("/budda");
