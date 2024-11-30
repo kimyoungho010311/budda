@@ -22,11 +22,10 @@ const recipeSchema = new mongoose.Schema({
     },
   ],
   steps: { type: String },
-  image: { type: String },
-  userId: { type: String, required: true },
+  image: { type: String }, // 이미지 URL 또는 경로
+  userId: { type: String, required: true }, // 사용자 ID 필드 추가
   likes: { type: Number, default: 0 }, // 좋아요 수
   likedBy: { type: [String], default: [] }, // 좋아요를 누른 사용자의 ID 목록
-  uploadTime: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);

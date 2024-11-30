@@ -14,7 +14,6 @@ function RecipeEdit() {
     removeIngredient,
     handleIngredientChange,
     handleStepsChange,
-    handleSubmit,
   } = useRecipeForm();
   const { id } = useParams(); // 게시물 ID 가져오기
   const navigate = useNavigate();
@@ -33,7 +32,11 @@ function RecipeEdit() {
         setFormData({
           recipeName: recipeData.recipeName || "",
           recipeIntroduction: recipeData.recipeIntroduction || "",
-          categories: recipeData.categories || { type: "", situation: "", ingredient: "" },
+          categories: recipeData.categories || {
+            type: "",
+            situation: "",
+            ingredient: "",
+          },
           info: recipeData.info || { count: "", time: "", difficulty: "" },
           ingredients: recipeData.ingredients || [],
           steps: recipeData.steps || "",
@@ -48,25 +51,25 @@ function RecipeEdit() {
 
   // 수정 완료 요청
   const handleUpdateSubmit = async () => {
-    if (window.confirm("레시피를 수정하시겠습니까?")){
-        try {
-            const response = await fetch(`http://localhost:5000/recipes/${id}`, {
-            method: "PUT",
-            headers: {
+    if (window.confirm("레시피를 수정하시겠습니까?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/recipes/${id}`, {
+          method: "PUT",
+          headers: {
             "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
+          },
+          body: JSON.stringify(formData),
         });
 
         if (response.ok) {
-            alert("수정이 완료되었습니다!");
-            navigate(`/recipes/${id}`); // 수정 후 상세 페이지로 이동
+          alert("수정이 완료되었습니다!");
+          navigate(`/recipes/${id}`); // 수정 후 상세 페이지로 이동
         } else {
-            alert("수정에 실패하였습니다.");
+          alert("수정에 실패하였습니다.");
         }
-        } catch (error) {
+      } catch (error) {
         console.error("수정에 실패하였습니다:", error);
-        }
+      }
     }
   };
 
