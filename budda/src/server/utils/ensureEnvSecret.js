@@ -5,7 +5,6 @@ require("dotenv").config();
 
 // .env 파일 경로
 const envPath = path.resolve(__dirname, "../../../.env");
-
 // JWT 비밀 키 확인 및 생성
 function ensureJwtSecret() {
   // 환경 변수에서 JWT_SECRET 가져오기

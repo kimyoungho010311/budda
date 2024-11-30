@@ -60,7 +60,9 @@ const jwtAuthMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     console.error("JWT verification failed:", error.message);
-    res.status(403).json({ success: false, message: "Invalid or expired token" });
+    res
+      .status(403)
+      .json({ success: false, message: "Invalid or expired token" });
   }
 };
 
@@ -191,7 +193,6 @@ app.put("/recipes/:id", async (req, res) => {
   }
 });
 
-
 // 레시피 삭제 API
 app.delete("/recipes/:id", async (req, res) => {
   try {
@@ -199,7 +200,9 @@ app.delete("/recipes/:id", async (req, res) => {
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-    res.status(200).json({ success: true, message: "Recipe deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Recipe deleted successfully" });
   } catch (error) {
     console.error("Error deleting recipe:", error.message);
     res.status(500).json({ message: "Failed to delete recipe" });
@@ -291,4 +294,56 @@ server.listen(PORT, () => {
   );
   console.log(`JWT_SECRET :`, process.env.JWT_SECRET);
   console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
+});
+
+// 좋아요 토클 API
+app.post("/recipes/:id/like", jwtAuthMiddleware, async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const userId = req.user.userId; // JWT에서 가져온 사용자 ID
+
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    // 이미 좋아요를 눌렀는지 확인
+    const userIndex = recipe.likedBy.indexOf(userId);
+
+    if (userIndex === -1) {
+      // 좋아요 추가
+      recipe.likedBy.push(userId);
+      recipe.likes += 1;
+    } else {
+      // 좋아요 제거
+      recipe.likedBy.splice(userIndex, 1);
+      recipe.likes -= 1;
+    }
+
+    await recipe.save();
+    res.status(200).json({
+      success: true,
+      likes: recipe.likes,
+      likedBy: recipe.likedBy,
+    });
+  } catch (error) {
+    console.error("Error toggling like:", error.message);
+    res.status(500).json({ success: false, message: "Failed to toggle like" });
+  }
+});
+
+// 좋아요 순으로 레시피 정렬
+app.get("/recipes/popular", async (req, res) => {
+  try {
+    const popularRecipes = await Recipe.find()
+      .sort({ likes: -1 }) // 좋아요 수 내림차순 정렬
+      .limit(10); // 최대 10개 레시피 반환
+    res.status(200).json(popularRecipes);
+  } catch (error) {
+    console.error("Error fetching popular recipes:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch popular recipes",
+    });
+  }
 });
