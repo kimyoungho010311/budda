@@ -121,6 +121,7 @@ const useRecipeForm = () => {
 
   return {
     formData,
+    setFormData,
     handleFileChange,
     handleInputChange,
     addIngredient,

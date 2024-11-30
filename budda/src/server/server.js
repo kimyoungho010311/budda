@@ -171,6 +171,39 @@ app.post("/recipes", jwtAuthMiddleware, async (req, res) => {
   }
 });
 
+// 레시피 수정 API
+app.put("/recipes/:id", async (req, res) => {
+  try {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    res.status(200).json(updatedRecipe);
+  } catch (error) {
+    console.error("Error updating recipe:", error.message);
+    res.status(500).json({ message: "Failed to update recipe" });
+  }
+});
+
+
+// 레시피 삭제 API
+app.delete("/recipes/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findByIdAndDelete(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    res.status(200).json({ success: true, message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting recipe:", error.message);
+    res.status(500).json({ message: "Failed to delete recipe" });
+  }
+});
+
 // 레시피 검색 API
 app.post("/search", async (req, res) => {
   try {
