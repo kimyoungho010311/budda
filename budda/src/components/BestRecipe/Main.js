@@ -38,7 +38,11 @@ function Main() {
       <div className="MainList">
         {recentRecipes.length > 0 ? (
           recentRecipes.map((recipe) => (
-            <Link to={`/recipes/${recipe._id}`} key={recipe._id} className="MainListEntity">
+            <Link
+              to={`/recipes/${recipe._id}`}
+              key={recipe._id}
+              className="MainListEntity"
+            >
               <div className="RecipeCard">
                 <img
                   src={recipe.image || "https://via.placeholder.com/150"}
