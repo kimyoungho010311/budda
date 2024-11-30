@@ -30,13 +30,10 @@ const PORT = 5000;
 
 // MongoDB 연결
 mongoose
-  .connect(process.env.DB_CONNECT, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
+  .connect(process.env.DB_CONNECT)
+  .then(() => console.log(c.green("MongoDB connected")))
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    console.error(c.red("MongoDB connection error:", err));
     process.exit(1);
   });
 
@@ -48,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" })); // URL-encode
 const jwtAuthMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.error("Authorization header is missing or invalid.");
+    console.error(c.red("Authorization header is missing or invalid."));
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
@@ -56,10 +53,12 @@ const jwtAuthMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; // JWT에서 디코딩한 사용자 정보 설정
-    console.log("JWT decoded:", decoded); // 디코딩된 정보 출력
+    console.log(
+      c.green("JWT decoded: ") + c.yellow(JSON.stringify(decoded, null, 2))
+    ); // 디코딩된 정보 출력
     next();
   } catch (error) {
-    console.error("JWT verification failed:", error.message);
+    console.error(c.red(`JWT verification failed: ${error.message}`));
     res
       .status(403)
       .json({ success: false, message: "Invalid or expired token" });
@@ -120,7 +119,7 @@ app.post("/auth/google", async (req, res) => {
       googleId: payload.sub, // 응답에 googleId 포함
     });
   } catch (error) {
-    console.error("Error during Google Auth:", error.message);
+    console.error(c.red(`Error during Google Auth: ${error.message}`));
     res.status(400).json({ success: false, message: "Invalid token" });
   }
 });
@@ -134,7 +133,7 @@ app.get("/recipes/recent", async (req, res) => {
 
     res.status(200).json(recipes);
   } catch (error) {
-    console.error("Error fetching recent recipes:", error.message);
+    console.error(c.red(`Error fetching recent recipes: ${error.message}`));
     res.status(500).json({
       success: false,
       message: "Failed to fetch recent recipes",
@@ -184,7 +183,7 @@ app.post("/recipes", jwtAuthMiddleware, async (req, res) => {
       .status(201)
       .json({ success: true, message: "Recipe created successfully" });
   } catch (error) {
-    console.error("Error saving recipe:", error.message);
+    console.error(c.red(`Error saving recipe: ${error.message}`));
     res.status(500).json({
       success: false,
       message: "Failed to save recipe",
@@ -206,7 +205,7 @@ app.put("/recipes/:id", async (req, res) => {
     }
     res.status(200).json(updatedRecipe);
   } catch (error) {
-    console.error("Error updating recipe:", error.message);
+    console.error(c.red(`Error updating recipe: ${error.message}`));
     res.status(500).json({ message: "Failed to update recipe" });
   }
 });
@@ -222,7 +221,7 @@ app.delete("/recipes/:id", async (req, res) => {
       .status(200)
       .json({ success: true, message: "Recipe deleted successfully" });
   } catch (error) {
-    console.error("Error deleting recipe:", error.message);
+    console.error(c.red(`Error deleting recipe: ${error.message}`));
     res.status(500).json({ message: "Failed to delete recipe" });
   }
 });
@@ -244,7 +243,7 @@ app.post("/search", async (req, res) => {
     const results = await Recipe.find(query);
     res.status(200).json(results);
   } catch (error) {
-    console.error("Error during search:", error.message);
+    console.error(c.red(`Error during search: ${error.message}`));
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch recipes" });
@@ -260,22 +259,22 @@ app.get("/recipes/:id", async (req, res) => {
     }
     res.json(recipe);
   } catch (error) {
-    console.error("Error fetching recipe:", error.message);
+    console.error(c.red(`Error fetching recipe: ${error.message}`));
     res.status(500).json({ message: "Failed to fetch recipe" });
   }
 });
 
 // Socket.IO 이벤트 처리
 io.on("connection", (socket) => {
-  console.log("사용자가 연결되었습니다.");
+  console.log(c.blue("사용자가 연결되었습니다."));
 
   socket.on("message", (msg) => {
-    console.log("서버에서 받은 메시지:", msg);
+    console.log(c.blue(`서버에서 받은 메시지: ${msg.text}`));
     socket.broadcast.emit("message", msg); // 메시지를 다른 클라이언트에게 전달
   });
 
   socket.on("disconnect", () => {
-    console.log("사용자가 연결을 종료했습니다.");
+    console.log(c.blue("사용자가 연결을 종료했습니다."));
   });
 });
 
@@ -292,7 +291,7 @@ app.get("/user/:googleId", async (req, res) => {
     }
     res.status(200).json({ success: true, user });
   } catch (error) {
-    console.error("Error fetching user:", error.message);
+    console.error(c.red(`Error fetching user: ${error.message}`));
     res.status(500).json({
       success: false,
       message: "Failed to fetch user information",
@@ -305,12 +304,14 @@ app.get("/user/:googleId", async (req, res) => {
 server.listen(PORT, () => {
   console.log();
   console.log(
-    c.red(`=============================================================`)
+    c.black.bgRed(
+      `=============================================================`
+    )
   );
   console.log(
-    c.red(`=============================================================`)
+    c.red(`-------------------------------------------------------------`)
   );
-  console.log(`JWT_SECRET :`, process.env.JWT_SECRET);
+  console.log(c.green(`JWT_SECRET:`) + c.yellow(` ${process.env.JWT_SECRET}`));
   console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
 });
 
@@ -345,7 +346,7 @@ app.post("/recipes/:id/like", jwtAuthMiddleware, async (req, res) => {
       likedBy: recipe.likedBy,
     });
   } catch (error) {
-    console.error("Error toggling like:", error.message);
+    console.error(c.red("Error toggling like:", error.message));
     res.status(500).json({ success: false, message: "Failed to toggle like" });
   }
 });
@@ -358,7 +359,7 @@ app.get("/recipes/popular", async (req, res) => {
       .limit(10); // 최대 10개 레시피 반환
     res.status(200).json(popularRecipes);
   } catch (error) {
-    console.error("Error fetching popular recipes:", error.message);
+    console.error(e.red("Error fetching popular recipes:", error.message));
     res.status(500).json({
       success: false,
       message: "Failed to fetch popular recipes",
