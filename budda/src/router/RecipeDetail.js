@@ -14,6 +14,8 @@ function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [likes, setLikes] = useState(0);
+  const [hasLiked, setHasLiked] = useState(false);
 
   const handleIngredientClick = (ingredientName) => {
     const searchUrl = `https://www.coupang.com/np/search?component=&q=${encodeURIComponent(
@@ -21,6 +23,10 @@ function RecipeDetail() {
     )}`;
     window.open(searchUrl, "_blank");
   };
+
+  const currentUserGoogleId =
+  localStorage.getItem("token") &&
+  jwtDecode(localStorage.getItem("token")).sub;
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -31,16 +37,8 @@ function RecipeDetail() {
         }
         const recipeData = await response.json();
         setRecipe(recipeData);
-
-        if (recipeData.userId) {
-          const userResponse = await fetch(
-            `http://localhost:5000/user/${recipeData.userId}`
-          );
-          if (userResponse.ok) {
-            const userData = await userResponse.json();
-            setUserInfo(userData.user);
-          }
-        }
+        setLikes(recipeData.likes?.length || 0);
+        setHasLiked(recipeData.likes?.includes(currentUserGoogleId) || false);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -76,39 +74,44 @@ function RecipeDetail() {
   if (error) return <p>Error : {error}</p>;
   if (!recipe) return <p>No recipe found</p>;
 
-  const currentUserGoogleId =
-    localStorage.getItem("token") &&
-    jwtDecode(localStorage.getItem("token")).sub;
-
-  const handleLikeToggle = async () => {
-    const currentUserGoogleId =
-      localStorage.getItem("token") &&
-      jwtDecode(localStorage.getItem("token")).sub;
-
+  const handleLike = async () => {
+    const token = localStorage.getItem("accessToken"); // 서버에서 발급한 JWT
     if (!currentUserGoogleId) {
       alert("로그인이 필요합니다.");
       return;
     }
 
+    // 좋아요 취소 확인 메시지
+    if (hasLiked && !window.confirm("좋아요를 취소하시겠습니까?")) {
+      return;
+    }
+  
+    console.log("좋아요 요청 전송: AccessToken:", token);
+    console.log("좋아요 요청 전송: UserID:", currentUserGoogleId);
+    console.log("Token:", token);
+    console.log("UserID:", currentUserGoogleId);
+  
     try {
       const response = await fetch(`http://localhost:5000/recipes/${id}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
         },
+        body: JSON.stringify({ userId: currentUserGoogleId }),
       });
-      if (response.ok) {
-        const updatedData = await response.json();
-        setRecipe((prevRecipe) => ({
-          ...prevRecipe,
-          likes: updatedData.likes,
-        }));
-      } else {
-        console.error("Failed to toggle like");
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("좋아요 처리 실패:", errorData);
+        throw new Error("Failed to update likes");
       }
+
+      const data = await response.json();
+      setLikes(data.likes);
+      setHasLiked(data.hasLiked);
     } catch (err) {
-      console.error("Error toggling like:", err);
+      console.error("Error updating like:", error.message);
     }
   };
 
@@ -197,7 +200,7 @@ function RecipeDetail() {
         )}
       </div>
       <div className="like-btn">
-        <button onClick={handleLikeToggle}>👍 Like {recipe.likes || 0}</button>
+        <button onClick={handleLike}>{hasLiked ? "👍 Unlike" : "👍 Like"} {likes}</button>
       </div>
       <HowToUse />
       <Footer />
