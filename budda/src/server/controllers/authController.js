@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const jwt = require("../models/User")
+const jwt = require("jsonwebtoken")
 const { OAuth2Client } = require('google-auth-library');
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE);

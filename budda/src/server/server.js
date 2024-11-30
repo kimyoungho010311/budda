@@ -42,15 +42,31 @@ mongoose
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(bodyParser.json({ limit: "10mb" })); // JSON 데이터 크기 제한
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" })); // URL-encoded 데이터 크기 제한
+// JWT 인증
+const jwtAuthMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.error("Authorization header is missing or invalid.");
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // JWT에서 디코딩한 사용자 정보 설정
+    console.log("JWT decoded:", decoded); // 디코딩된 정보 출력
+    next();
+  } catch (error) {
+    console.error("JWT verification failed:", error.message);
+    res.status(403).json({ success: false, message: "Invalid or expired token" });
+  }
+};
 
 // Google OAuth2 Client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Multer 설정
-const upload = multer({
-  dest: "uploads/",
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB 제한
-});
+const upload = multer();
 
 // 기본 경로
 app.get("/", (req, res) => {
@@ -83,9 +99,16 @@ app.post("/auth/google", async (req, res) => {
       await existingUser.save();
     }
 
-    const jwtToken = jwt.sign(user, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const jwtToken = jwt.sign(
+      {
+        userId: user.googleId, // googleId를 userId로 설정
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     res.status(200).json({
       success: true,
@@ -99,7 +122,7 @@ app.post("/auth/google", async (req, res) => {
 });
 
 // 레시피 저장 API
-app.post("/recipes", async (req, res) => {
+app.post("/recipes", jwtAuthMiddleware, async (req, res) => {
   try {
     const {
       recipeName,
@@ -109,14 +132,15 @@ app.post("/recipes", async (req, res) => {
       ingredients,
       steps,
       image,
-      googleId, // Google ID 수신
     } = req.body;
 
-    if (!googleId) {
+    if (!req.user || !req.user.userId) {
       return res
         .status(400)
         .json({ success: false, message: "User ID is required." });
     }
+
+    const googleId = req.user.userId; // JWT에서 googleId 가져오기
 
     const parsedInfo = JSON.parse(info || "{}");
     const parsedCategories = JSON.parse(categories || "{}");
@@ -230,6 +254,6 @@ server.listen(PORT, () => {
   console.log(
     c.red(`=============================================================`)
   );
-  console.log(`JWT_SECTE :`, process.env.JWT_SECRET);
+  console.log(`JWT_SECRET :`, process.env.JWT_SECRET);
   console.log(c.bold.magenta(`Server running at http://localhost:${PORT}`));
 });
