@@ -11,6 +11,8 @@ const User = require("./models/User");
 const Recipe = require("./models/Recipe");
 
 require("dotenv").config();
+const ensureJwtSecret = require("./utils/ensureEnvSecret");
+ensureJwtSecret();
 
 // ansi-colors
 const c = require("ansi-colors");
