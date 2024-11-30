@@ -74,7 +74,7 @@ function RecipeDetail() {
 
   const currentUserGoogleId =
     localStorage.getItem("token") &&
-    jwtDecode(localStorage.getItem("token")).googleId;
+    jwtDecode(localStorage.getItem("token")).sub;
 
   return (
     <div>
