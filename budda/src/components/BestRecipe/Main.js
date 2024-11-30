@@ -24,6 +24,10 @@ function Main() {
     fetchRecentRecipes();
   }, []);
 
+  const getSafeImage = (imageUrl) => {
+    return imageUrl || "https://via.placeholder.com/150?text=No+Image";
+  };
+
   return (
     <div className="container">
       <h1 className="h1">What is the best cooking recipe?</h1>
@@ -45,7 +49,7 @@ function Main() {
             >
               <div className="RecipeCard">
                 <img
-                  src={recipe.image || "https://via.placeholder.com/150"}
+                  src={getSafeImage(recipe.image)}
                   alt={recipe.recipeName}
                   className="RecipeCardImage"
                 />
