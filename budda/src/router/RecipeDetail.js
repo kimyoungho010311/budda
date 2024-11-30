@@ -25,8 +25,8 @@ function RecipeDetail() {
   };
 
   const currentUserGoogleId =
-  localStorage.getItem("token") &&
-  jwtDecode(localStorage.getItem("token")).sub;
+    localStorage.getItem("token") &&
+    jwtDecode(localStorage.getItem("token")).sub;
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -85,12 +85,13 @@ function RecipeDetail() {
     if (hasLiked && !window.confirm("좋아요를 취소하시겠습니까?")) {
       return;
     }
-  
+    console.log(`------------------------------------------------`);
     console.log("좋아요 요청 전송: AccessToken:", token);
     console.log("좋아요 요청 전송: UserID:", currentUserGoogleId);
     console.log("Token:", token);
     console.log("UserID:", currentUserGoogleId);
-  
+    console.log(`------------------------------------------------`);
+
     try {
       const response = await fetch(`http://localhost:5000/recipes/${id}/like`, {
         method: "POST",
@@ -200,7 +201,9 @@ function RecipeDetail() {
         )}
       </div>
       <div className="like-btn">
-        <button onClick={handleLike}>{hasLiked ? "👍 Unlike" : "👍 Like"} {likes}</button>
+        <button onClick={handleLike}>
+          {hasLiked ? "👍 Unlike" : "👍 Like"} {likes}
+        </button>
       </div>
       <HowToUse />
       <Footer />

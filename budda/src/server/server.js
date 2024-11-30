@@ -339,16 +339,22 @@ server.listen(PORT, () => {
 app.post("/recipes/:id/like", verifyToken, async (req, res) => {
   const { userId } = req.body; // 요청 바디에서 사용자 ID를 가져옴
   const { id } = req.params; // 게시글 ID
-
-  console.log("좋아요 요청 수신:");
-  console.log("레시피 ID:", id);
-  console.log("UserID:", userId);
-
+  console.log(
+    c.magenta.bold(`-------------------------------------------------`)
+  );
+  console.log(c.green("좋아요 요청 수신:"));
+  console.log(c.green(`레시피 ID : ` + c.yellow(`${id}`)));
+  console.log(c.green(`UserID : ` + c.yellow(`${userId}`)));
+  console.log(
+    c.magenta.bold(`-------------------------------------------------`)
+  );
   try {
     const recipe = await Recipe.findById(id);
 
     if (!recipe) {
-      return res.status(404).json({ success: false, message: "Recipe not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Recipe not found" });
     }
 
     // likes 필드가 배열인지 확인 및 초기화
