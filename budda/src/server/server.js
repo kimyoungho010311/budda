@@ -171,6 +171,19 @@ app.post("/recipes", jwtAuthMiddleware, async (req, res) => {
   }
 });
 
+app.delete("/recipes/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findByIdAndDelete(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    res.status(200).json({ success: true, message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting recipe:", error.message);
+    res.status(500).json({ message: "Failed to delete recipe" });
+  }
+});
+
 // 레시피 검색 API
 app.post("/search", async (req, res) => {
   try {

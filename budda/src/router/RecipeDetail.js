@@ -5,8 +5,10 @@ import Footer from "../components/Footer/Footer";
 import HowToUse from "../components/HowToUse/HowToUse";
 import { jwtDecode } from "jwt-decode";
 import "./RecipeDetail.css";
+import { useNavigate } from "react-router-dom";
 
 function RecipeDetail() {
+  const navigate = useNavigate()
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,18 +51,20 @@ function RecipeDetail() {
   }, [id]);
 
   const handleDelete = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        alert("Recipe deleted successfully");
-        window.location.href = "/";
-      } else {
-        alert("Failed to delete recipe");
+    if (window.confirm("레시피를 삭제하시겠습니까?")){
+      try {
+        const response = await fetch(`http://localhost:5000/recipes/${id}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          alert("삭제가 완료되었습니다.");
+          navigate("/search");
+        } else {
+          alert("삭제에 실패하였습니다.");
+        }
+      } catch (error) {
+        console.error("삭제에 실패하였습니다:", error);
       }
-    } catch (error) {
-      console.error("Error deleting recipe:", error);
     }
   };
 
