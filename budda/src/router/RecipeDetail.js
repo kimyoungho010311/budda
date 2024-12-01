@@ -333,69 +333,84 @@ function RecipeDetail() {
           </>
         )}
       </div>
-      <div className="like-btn">
-        <button onClick={handleLike}>
-          {hasLiked ? "👍 Unlike" : "👍 Like"} {likes}
-        </button>
-      </div>
-      <div className="comments-section">
-        <h3>Comments</h3>
-        <div className="comments-list">
+
+      <div className="comments_section">
+        <h2>Comments</h2>
+        <div className="comments_list">
           {comments.map((comment) => (
             <div key={comment._id} className="comment">
-              <p className="timestamp">
-                {new Date(comment.createdAt).toLocaleString()}{" "}
-                {/* 작성 시간 표시 */}
-              </p>
               {editingComment === comment._id ? (
-                // 댓글 수정 모드
-                <div>
+                <div className="comment_edit">
                   <textarea
+                    className="comment_input"
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     placeholder="Edit your comment..."
                   />
-                  <button onClick={() => handleEditComment(comment._id)}>
+                  <button
+                    className="comment_actions_btn"
+                    onClick={() => handleEditComment(comment._id)}
+                  >
                     Save
                   </button>
-                  <button onClick={() => setEditingComment(null)}>
+                  <button
+                    className="comment_actions_btn"
+                    onClick={() => setEditingComment(null)}
+                  >
                     Cancel
                   </button>
                 </div>
               ) : (
-                // 댓글 표시 모드
-                <div>
-                  <p>
-                    <strong>{comment.userId}</strong>: {comment.content}
-                  </p>
-                  {comment.userId === currentUserGoogleId && (
-                    <div className="comment-actions">
-                      <button
-                        onClick={() => {
-                          setEditingComment(comment._id);
-                          setEditContent(comment.content);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button onClick={() => handleDeleteComment(comment._id)}>
-                        Delete
-                      </button>
+                <div className="comment_show">
+                  {/* 타임스탬프와 댓글 내용을 포함하여 comment_actions까지 감싸는 컨테이너 */}
+                  <div className="comment_content">
+                    <div className="timestamp">
+                      {new Date(comment.createdAt).toLocaleString()}
                     </div>
-                  )}
+                    <div className="comment_text">
+                      <strong>{comment.userId}</strong>: {comment.content}
+                      {comment.userId === currentUserGoogleId && (
+                        <div className="comment_actions">
+                          <button
+                            className="comment_actions_btn"
+                            onClick={() => {
+                              setEditingComment(comment._id);
+                              setEditContent(comment.content);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="comment_actions_btn"
+                            onClick={() => handleDeleteComment(comment._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           ))}
         </div>
-        <div className="add-comment">
+        <div className="add_comment">
           <textarea
+            className="comment_input"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
           />
-          <button onClick={handleAddComment}>Post Comment</button>
+          <button className="add_comment_btn" onClick={handleAddComment}>
+            Post Comment
+          </button>
         </div>
+      </div>
+      <div className="like_btn">
+        <button onClick={handleLike}>
+          {hasLiked ? "👍 Unlike" : "👍 Like"} {likes}
+        </button>
       </div>
       <HowToUse />
       <Footer />
