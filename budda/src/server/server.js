@@ -526,7 +526,7 @@ io.on("connection", (socket) => {
 });
 
 // 사용자 정보 조회 API
-app.get("/user/:googleId", async (req, res) => {
+app.get("/profile/:googleId", async (req, res) => {
   const { googleId } = req.params;
 
   try {
@@ -544,6 +544,19 @@ app.get("/user/:googleId", async (req, res) => {
       message: "Failed to fetch user information",
       error: error.message,
     });
+  }
+});
+
+// 사용자가 업로드한 레시피 API
+app.get("/recipes/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const userRecipes = await Recipe.find({ userId }); // 사용자 ID로 레시피 검색
+    res.status(200).json(userRecipes);
+  } catch (error) {
+    console.error("Error fetching user recipes:", error.message);
+    res.status(500).json({ message: "Failed to fetch user recipes" });
   }
 });
 
