@@ -67,3 +67,9 @@
   left: 1000px;
   width: 200px;
 }
+
+.wrapp_loading_message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -7,13 +7,21 @@
 
 .wrapp_recipe_info {
   border: solid 1px rgb(246, 249, 247);
-
   display: flex; /* Flexbox 활성화 */
   justify-content: center; /* 내부 콘텐츠 수평 가운데 정렬 */
   align-items: center; /* 내부 콘텐츠 수직 가운데 정렬 */
   flex-direction: column; /* 세로 방향으로 정렬 */
   width: 100%; /* 가로 크기 설정 (선택 사항) */
   height: auto; /* 높이 자동 조절 */
+}
+
+.profileLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-decoration: none;
+  color: black;
 }
 
 .wrapp_catgoreis_info {
@@ -145,7 +153,6 @@
   align-items: center;
   flex-direction: column;
 }
-
 
 .comments_section {
   background-color: rgb(246, 249, 247);

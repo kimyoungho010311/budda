@@ -106,7 +106,7 @@ function ProfilePage() {
                 key={recipe._id}
                 className="recipe-card"
               >
-                <div>
+                <div className="wrapp_recipe">
                   <img
                     src={
                       recipe.image ||
