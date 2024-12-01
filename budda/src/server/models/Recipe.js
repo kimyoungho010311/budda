@@ -26,6 +26,14 @@ const recipeSchema = new mongoose.Schema({
   userId: { type: String, required: true }, // 사용자 ID 필드 추가
   likes: { type: [String], default: [] }, // 좋아요를 누른 사용자의 ID 목록
   uploadTime: { type: Date, default: Date.now },
+  comments: [
+    {
+      _id: { type: mongoose.Schema.Types.ObjectId, default: () => new mongoose.Types.ObjectId() }, // 고유 ID 생성
+      userId: { type: String, required: true }, // 댓글 작성자 ID
+      content: { type: String, required: true }, // 댓글 내용
+      createdAt: { type: Date, default: Date.now }, // 댓글 작성 시간
+    },
+  ],
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);
