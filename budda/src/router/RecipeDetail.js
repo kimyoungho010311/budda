@@ -8,8 +8,7 @@ import "./RecipeDetail.css";
 import { useNavigate } from "react-router-dom";
 
 const currentUserGoogleId =
-  localStorage.getItem("token") &&
-  jwtDecode(localStorage.getItem("token")).sub;
+  localStorage.getItem("token") && jwtDecode(localStorage.getItem("token")).sub;
 
 function RecipeDetail() {
   const navigate = useNavigate();
@@ -34,7 +33,9 @@ function RecipeDetail() {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}/comments`);
+      const response = await fetch(
+        `http://localhost:5000/recipes/${id}/comments`
+      );
       if (!response.ok) {
         throw new Error(`Failed to fetch comments: ${response.status}`);
       }
@@ -63,8 +64,12 @@ function RecipeDetail() {
       }
     };
     const saveViewedRecipe = () => {
-      const viewedRecipes = JSON.parse(localStorage.getItem("recentRecipes")) || [];
-      const updatedRecipes = [id, ...viewedRecipes.filter((recipeId) => recipeId !== id)].slice(0, 5); // 중복 제거 및 최대 5개
+      const viewedRecipes =
+        JSON.parse(localStorage.getItem("recentRecipes")) || [];
+      const updatedRecipes = [
+        id,
+        ...viewedRecipes.filter((recipeId) => recipeId !== id),
+      ].slice(0, 5); // 중복 제거 및 최대 5개
       localStorage.setItem("recentRecipes", JSON.stringify(updatedRecipes));
     };
 
@@ -78,25 +83,28 @@ function RecipeDetail() {
       alert("댓글을 입력하세요.");
       return;
     }
-  
+
     const token = localStorage.getItem("accessToken");
-  
+
     try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}/comments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: newComment }), // userId는 서버에서 JWT로 확인
-      });
-  
+      const response = await fetch(
+        `http://localhost:5000/recipes/${id}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ content: newComment }), // userId는 서버에서 JWT로 확인
+        }
+      );
+
       if (!response.ok) {
         throw new Error("댓글 추가에 실패했습니다.");
       }
-  
+
       const { comment } = await response.json(); // 서버 응답에서 새 댓글 데이터 추출
-  
+
       setComments((prevComments) => [...prevComments, comment]); // 기존 댓글에 새 댓글 추가
       setNewComment(""); // 입력 필드 초기화
     } catch (err) {
@@ -104,29 +112,31 @@ function RecipeDetail() {
       alert("댓글 추가 중 문제가 발생했습니다. 다시 시도해주세요.");
     }
   };
-  
 
   const handleEditComment = async (commentId) => {
     if (!editContent.trim()) {
       alert("수정할 내용을 입력하세요.");
       return;
     }
-  
+
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}/comments/${commentId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: editContent }),
-      });
-  
+      const response = await fetch(
+        `http://localhost:5000/recipes/${id}/comments/${commentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ content: editContent }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to edit comment: ${response.statusText}`);
       }
-  
+
       const updatedComment = await response.json();
       setComments((prevComments) =>
         prevComments.map((comment) =>
@@ -140,32 +150,36 @@ function RecipeDetail() {
       alert("댓글 수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
-  
+
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm("정말로 댓글을 삭제하시겠습니까?")) {
       return;
     }
-  
+
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}/comments/${commentId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      const response = await fetch(
+        `http://localhost:5000/recipes/${id}/comments/${commentId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to delete comment: ${response.statusText}`);
       }
-  
-      setComments((prevComments) => prevComments.filter((comment) => comment._id !== commentId));
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
     } catch (err) {
       console.error("Error deleting comment:", err.message);
       alert("댓글 삭제에 실패했습니다. 다시 시도해주세요.");
     }
   };
-  
 
   const handleDelete = async () => {
     if (window.confirm("레시피를 삭제하시겠습니까?")) {
@@ -204,12 +218,13 @@ function RecipeDetail() {
     if (hasLiked && !window.confirm("좋아요를 취소하시겠습니까?")) {
       return;
     }
-  
+    console.log(`------------------------------------------------`);
     console.log("좋아요 요청 전송: AccessToken:", token);
     console.log("좋아요 요청 전송: UserID:", currentUserGoogleId);
     console.log("Token:", token);
     console.log("UserID:", currentUserGoogleId);
-  
+    console.log(`------------------------------------------------`);
+
     try {
       const response = await fetch(`http://localhost:5000/recipes/${id}/like`, {
         method: "POST",
@@ -318,60 +333,84 @@ function RecipeDetail() {
           </>
         )}
       </div>
-      <div className="like-btn">
-        <button onClick={handleLike}>{hasLiked ? "👍 Unlike" : "👍 Like"} {likes}</button>
-      </div>
-      <div className="comments-section">
-        <h3>Comments</h3>
-        <div className="comments-list">
+
+      <div className="comments_section">
+        <h2>Comments</h2>
+        <div className="comments_list">
           {comments.map((comment) => (
             <div key={comment._id} className="comment">
-              <p className="timestamp">
-                {new Date(comment.createdAt).toLocaleString()} {/* 작성 시간 표시 */}
-              </p>
               {editingComment === comment._id ? (
-                // 댓글 수정 모드
-                <div>
+                <div className="comment_edit">
                   <textarea
+                    className="comment_input"
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     placeholder="Edit your comment..."
                   />
-                  <button onClick={() => handleEditComment(comment._id)}>Save</button>
-                  <button onClick={() => setEditingComment(null)}>Cancel</button>
+                  <button
+                    className="comment_actions_btn"
+                    onClick={() => handleEditComment(comment._id)}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="comment_actions_btn"
+                    onClick={() => setEditingComment(null)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               ) : (
-                // 댓글 표시 모드
-                <div>
-                  <p>
-                    <strong>{comment.userId}</strong>: {comment.content}
-                  </p>
-                  {comment.userId === currentUserGoogleId && (
-                    <div className="comment-actions">
-                      <button
-                        onClick={() => {
-                          setEditingComment(comment._id);
-                          setEditContent(comment.content);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                <div className="comment_show">
+                  {/* 타임스탬프와 댓글 내용을 포함하여 comment_actions까지 감싸는 컨테이너 */}
+                  <div className="comment_content">
+                    <div className="timestamp">
+                      {new Date(comment.createdAt).toLocaleString()}
                     </div>
-                  )}
+                    <div className="comment_text">
+                      <strong>{comment.userId}</strong>: {comment.content}
+                      {comment.userId === currentUserGoogleId && (
+                        <div className="comment_actions">
+                          <button
+                            className="comment_actions_btn"
+                            onClick={() => {
+                              setEditingComment(comment._id);
+                              setEditContent(comment.content);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="comment_actions_btn"
+                            onClick={() => handleDeleteComment(comment._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           ))}
         </div>
-        <div className="add-comment">
+        <div className="add_comment">
           <textarea
+            className="comment_input"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
           />
-          <button onClick={handleAddComment}>Post Comment</button>
+          <button className="add_comment_btn" onClick={handleAddComment}>
+            Post Comment
+          </button>
         </div>
+      </div>
+      <div className="like_btn">
+        <button onClick={handleLike}>
+          {hasLiked ? "👍 Unlike" : "👍 Like"} {likes}
+        </button>
       </div>
       <HowToUse />
       <Footer />
