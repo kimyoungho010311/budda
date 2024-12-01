@@ -62,9 +62,15 @@ function RecipeDetail() {
         setLoading(false);
       }
     };
+    const saveViewedRecipe = () => {
+      const viewedRecipes = JSON.parse(localStorage.getItem("recentRecipes")) || [];
+      const updatedRecipes = [id, ...viewedRecipes.filter((recipeId) => recipeId !== id)].slice(0, 5); // 중복 제거 및 최대 5개
+      localStorage.setItem("recentRecipes", JSON.stringify(updatedRecipes));
+    };
 
     fetchRecipe();
     fetchComments();
+    saveViewedRecipe();
   }, [id]);
 
   const handleAddComment = async () => {

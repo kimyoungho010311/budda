@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 function Main() {
   const [recentRecipes, setRecentRecipes] = useState([]);
   const [popularRecipes, setPopularRecipes] = useState([]);
+  const [viewedRecipes, setViewedRecipes] = useState([]);
 
   useEffect(() => {
     const fetchPopularRecipes = async () => {
@@ -33,9 +34,26 @@ function Main() {
         console.error("Error fetching recent recipes:", error.message);
       }
     };
+    const fetchViewedRecipes = async () => {
+      const recipeIds = JSON.parse(localStorage.getItem("recentRecipes")) || [];
+      if (recipeIds.length > 0) {
+        try {
+          const recipePromises = recipeIds.map((id) =>
+            fetch(`http://localhost:5000/recipes/${id}`).then((res) =>
+              res.ok ? res.json() : null
+            )
+          );
+          const recipes = (await Promise.all(recipePromises)).filter(Boolean); // 필터링: null 제거
+          setViewedRecipes(recipes);
+        } catch (error) {
+          console.error("Error fetching viewed recipes:", error.message);
+        }
+      }
+    };
 
     fetchPopularRecipes();
     fetchRecentRecipes();
+    fetchViewedRecipes();
   }, []);
 
   const getSafeImage = (imageUrl) => {
@@ -102,11 +120,26 @@ function Main() {
 
       <h1 className="h1">Recently viewed recipes</h1>
       <div className="MainList">
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
-        <div className="MainListEntity">+</div>
+        {viewedRecipes.length > 0 ? (
+          viewedRecipes.map((recipe) => (
+            <Link
+              to={`/recipes/${recipe._id}`}
+              key={recipe._id}
+              className="MainListEntity"
+            >
+              <div className="RecipeCard">
+                <img
+                  src={getSafeImage(recipe.image)}
+                  alt={recipe.recipeName}
+                  className="RecipeCardImage"
+                />
+                <p className="RecipeCardName">{recipe.recipeName}</p>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p>No recently viewed recipes.</p>
+        )}
       </div>
       <Footer />
     </div>

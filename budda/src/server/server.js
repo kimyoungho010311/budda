@@ -185,6 +185,19 @@ app.get("/recipes/recent", async (req, res) => {
   }
 });
 
+// 최근 조회한 레시피 API
+app.post("/recipes/viewed", async (req, res) => {
+  try {
+    const { recipeIds } = req.body;
+    const recipes = await Recipe.find({ _id: { $in: recipeIds } })
+    .sort({});
+    res.status(200).json(recipes);
+  } catch (error) {
+    console.error("Error fetching viewed recipes:", error.message);
+    res.status(500).json({ success: false, message: "Failed to fetch viewed recipes" });
+  }
+});
+
 // 레시피 저장 API
 app.post("/recipes", jwtAuthMiddleware, async (req, res) => {
   try {
