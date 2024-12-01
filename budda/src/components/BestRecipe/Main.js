@@ -14,7 +14,9 @@ function Main() {
       try {
         const response = await fetch("http://localhost:5000/recipes/popular");
         if (!response.ok) {
-          throw new Error(`Failed to fetch popular recipes: ${response.status}`);
+          throw new Error(
+            `Failed to fetch popular recipes: ${response.status}`
+          );
         }
         const data = await response.json();
         setPopularRecipes(data);
@@ -64,7 +66,7 @@ function Main() {
     <div className="container">
       <h1 className="h1">What is the best cooking recipe?</h1>
       <div className="MainList">
-      {popularRecipes.length > 0 ? (
+        {popularRecipes.length > 0 ? (
           popularRecipes.map((recipe) => (
             <Link
               to={`/recipes/${recipe._id}`}
@@ -82,7 +84,9 @@ function Main() {
             </Link>
           ))
         ) : (
-          <p>Loading popular recipes...</p>
+          <div className="wrapp_loading_message">
+            <p>Loading popular recipes...</p>
+          </div>
         )}
       </div>
       <h1 className="h1">Recent created cooking recipe</h1>
@@ -105,7 +109,9 @@ function Main() {
             </Link>
           ))
         ) : (
-          <p>Loading recent recipes...</p>
+          <div className="wrapp_loading_message">
+            <p>Loading recent recipes...</p>
+          </div>
         )}
       </div>
       <HowToUse />
@@ -138,7 +144,9 @@ function Main() {
             </Link>
           ))
         ) : (
-          <p>No recently viewed recipes.</p>
+          <div className="wrapp_loading_message">
+            <p>No recently viewed recipes.</p>
+          </div>
         )}
       </div>
       <Footer />
