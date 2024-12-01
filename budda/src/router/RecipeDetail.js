@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import NavBar from "../components/NavBar/NavBar";
 import Footer from "../components/Footer/Footer";
 import HowToUse from "../components/HowToUse/HowToUse";
@@ -57,12 +57,24 @@ function RecipeDetail() {
         setRecipe(recipeData);
         setLikes(recipeData.likes?.length || 0);
         setHasLiked(recipeData.likes?.includes(currentUserGoogleId) || false);
+        
+        // 작성자 정보 가져오기
+        if (recipeData.userId) {
+          const userResponse = await fetch(
+            `http://localhost:5000/profile/${recipeData.userId}`
+          );
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            setUserInfo(userData.user);
+          }
+        }
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
+
     const saveViewedRecipe = () => {
       const viewedRecipes =
         JSON.parse(localStorage.getItem("recentRecipes")) || [];
@@ -258,12 +270,14 @@ function RecipeDetail() {
           <p>{recipe.recipeIntroduction}</p>
           {userInfo && (
             <div className="userInfo">
-              <img
-                src={userInfo.picture}
-                alt={`${userInfo.name}'s profile`}
-                className="userProfileImage"
-              />
-              <h3>{userInfo.name}</h3>
+              <Link to={`/profile/${userInfo.googleId}`} className="profileLink">
+                <img
+                  src={userInfo.picture || "https://via.placeholder.com/40"}
+                  alt={`${userInfo.name}'s profile`}
+                  className="userProfileImage"
+                />
+                <h3>{userInfo.name}</h3>
+              </Link>
             </div>
           )}
         </div>

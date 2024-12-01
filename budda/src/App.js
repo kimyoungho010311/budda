@@ -42,7 +42,7 @@ function App() {
             }
           />
           <Route
-            path="/profile"
+            path="/profile/:googleId"
             element={
               <ProtectedRoute>
                 <ProfilePage />

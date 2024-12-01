@@ -526,7 +526,7 @@ io.on("connection", (socket) => {
 });
 
 // 사용자 정보 조회 API
-app.get("/user/:googleId", async (req, res) => {
+app.get("/profile/:googleId", async (req, res) => {
   const { googleId } = req.params;
 
   try {

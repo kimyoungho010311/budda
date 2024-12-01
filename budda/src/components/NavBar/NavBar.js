@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { isAuthenticated } from "../../util/authUtil";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function NavBarModule() {
   const navigate = useNavigate();
@@ -27,6 +28,21 @@ function NavBarModule() {
     // 홈 화면으로 리디렉션
     navigate("/budda");
   };
+
+  // 현재 사용자의 googleId 가져오기
+  const getGoogleId = () => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        return decoded.userId; // Google ID 추출
+      } catch (err) {
+        console.error("Failed to decode token:", err);
+      }
+    }
+  };
+
+  const googleId = getGoogleId();
 
   return (
     <div className="nav_bar">
@@ -64,7 +80,7 @@ function NavBarModule() {
             <Link onClick={handleLogout} className="nav_bar_logout">
               Log out
             </Link>
-            <Link to="/profile" className="nav_bar_logout">
+            <Link to={`/profile/${getGoogleId()}`} className="nav_bar_logout">
               Profile
             </Link>
           </div>

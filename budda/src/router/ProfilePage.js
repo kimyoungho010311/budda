@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode"; // jwt-decode 라이브러리 import
 import "./Profile.css"; // 스타일링 파일
 import NavBarModule from "../components/NavBar/NavBar";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 function ProfilePage() {
+  const { googleId } = useParams();
   const [userInfo, setUserInfo] = useState([]);
   const [userRecipes, setUserRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,11 +24,31 @@ function ProfilePage() {
       const decoded = jwtDecode(token);
       setUserInfo(decoded);
 
+      const fetchUserInfo = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/profile/${googleId}`
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch user info");
+          }
+
+          const data = await response.json();
+          setUserInfo(data.user);
+        } catch (error) {
+          console.error("Error fetching user info:", error.message);
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
       // 유저가 작성한 레시피 검색
       const fetchUserRecipes = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/recipes/user/${decoded.sub}`
+            `http://localhost:5000/recipes/user/${googleId}`
           );
 
           if (!response.ok) {
@@ -44,13 +65,14 @@ function ProfilePage() {
         }
       };
 
+      fetchUserInfo();
       fetchUserRecipes();
     } catch (err) {
       console.error("Failed to decode token:", err.message);
       setError("유효하지 않은 토큰입니다. 다시 로그인해주세요.");
       setLoading(false);
     }
-  }, []);
+  }, [googleId]);
 
   return (
     <div>
