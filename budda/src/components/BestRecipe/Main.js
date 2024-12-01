@@ -17,15 +17,15 @@ function Main() {
         }
         const data = await response.json();
         setPopularRecipes(data);
-      } catch (err) {
-        console.error("Error fetching recent recipes");
+      } catch (error) {
+        console.error("Error fetching popular recipes", error.message);
       }
     };
     const fetchRecentRecipes = async () => {
       try {
         const response = await fetch("http://localhost:5000/recipes/recent");
         if (!response.ok) {
-          throw new Error("Failed to fetch recent recipes");
+          throw new Error(`Failed to fetch recent recipes: ${response.status}`);
         }
         const data = await response.json();
         setRecentRecipes(data);
@@ -64,7 +64,7 @@ function Main() {
             </Link>
           ))
         ) : (
-          <p>Loading recent recipes...</p>
+          <p>Loading popular recipes...</p>
         )}
       </div>
       <h1 className="h1">Recent created cooking recipe</h1>

@@ -144,11 +144,18 @@ app.post("/auth/google", async (req, res) => {
 // 좋아요가 많은 레시피 API
 app.get("/recipes/popular", async (req, res) => {
   try {
-    const recipes = await Recipe.find({})
-      .sort({ "likes": -1 }) // 좋아요순 정렬
-      .limit(5); // 최근 5개의 레시피만 반환
-
-    res.status(200).json(recipes);
+    const popularRecipes = await Recipe.aggregate([
+      {
+        $addFields: { likeCount: { $size: "$likes" } }, // 배열 길이 계산
+      },
+      {
+        $sort: { likeCount: -1 }, // 배열 길이를 기준으로 정렬
+      },
+      {
+        $limit: 5, // 상위 5개만 반환
+      },
+    ]);
+    res.status(200).json(popularRecipes);
   } catch (error) {
     console.error(c.red(`Error fetching recent recipes: ${error.message}`));
     res.status(500).json({
@@ -162,11 +169,11 @@ app.get("/recipes/popular", async (req, res) => {
 // 최근 생성된 레시피 API
 app.get("/recipes/recent", async (req, res) => {
   try {
-    const recipes = await Recipe.find({})
+    const recentRecipes = await Recipe.find({})
       .sort({ uploadTime: -1 }) // 최신순 정렬
       .limit(5); // 최근 5개의 레시피만 반환
 
-    res.status(200).json(recipes);
+    res.status(200).json(recentRecipes);
   } catch (error) {
     console.error(c.red(`Error fetching recent recipes: ${error.message}`));
     res.status(500).json({
@@ -393,21 +400,5 @@ app.post("/recipes/:id/like", verifyToken, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to toggle like" });
     console.error("Error updating likes:", error.message);
     res.status(500).json({ success: false, message: "Failed to update likes" });
-  }
-});
-
-// 좋아요 순으로 레시피 정렬
-app.get("/recipes/popular", async (req, res) => {
-  try {
-    const popularRecipes = await Recipe.find()
-      .sort({ likes: -1 }) // 좋아요 수 내림차순 정렬
-      .limit(10); // 최대 10개 레시피 반환
-    res.status(200).json(popularRecipes);
-  } catch (error) {
-    console.error(e.red("Error fetching popular recipes:", error.message));
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch popular recipes",
-    });
   }
 });
