@@ -5,7 +5,7 @@ import NavBarModule from "../components/NavBar/NavBar";
 
 function ProfilePage() {
   // 로컬 스토리지에서 JWT 토큰 가져오기
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("token");
 
   // 토큰이 없는 경우 처리
   if (!token) {
@@ -33,7 +33,7 @@ function ProfilePage() {
                 <strong>E-mail:</strong> {userInfo.email}
               </p>
               <p>
-                <strong>Google ID:</strong> {userInfo.googleId}
+                <strong>Google ID:</strong> {userInfo.sub}
               </p>
             </div>
           </div>
