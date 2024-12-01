@@ -72,12 +72,13 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "토큰이 필요합니다." });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader?.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증
     req.user = decoded; // 사용자 정보 저장
     next();
   } catch (error) {
+    console.error("Invalid token:", error.message);
     res.status(403).json({ message: "유효하지 않은 토큰입니다." });
   }
 };
@@ -306,6 +307,156 @@ app.get("/recipes/:id", async (req, res) => {
   } catch (error) {
     console.error(c.red(`Error fetching recipe: ${error.message}`));
     res.status(500).json({ message: "Failed to fetch recipe" });
+  }
+});
+
+// 댓글 목록 API
+app.get("/recipes/:id/comments", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    // 댓글을 생성 시간순으로 정렬
+    const sortedComments = recipe.comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    
+    res.status(200).json(sortedComments);
+  } catch (error) {
+    console.error("Error fetching comments:", error.message);
+    res.status(500).json({ message: "Failed to fetch comments" });
+  }
+});
+
+// 댓글 추가 API
+app.post("/recipes/:id/comments", verifyToken, async (req, res) => {
+  const { content } = req.body; // 요청 바디에서 사용자 ID와 댓글 내용 추출
+  const { id } = req.params; // 게시글 ID
+  const userId = req.user.userId;
+
+  console.log("댓글 추가 요청 수신:");
+  console.log("레시피 ID:", id);
+  console.log("UserID:", userId);
+  console.log("Content:", content);
+
+  if (!content || !content.trim()) {
+    return res.status(400).json({ success: false, message: "Comment content is required" });
+  }
+
+  try {
+    const recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+      return res.status(404).json({ success: false, message: "Recipe not found" });
+    }
+
+    // comments 필드가 배열인지 확인 및 초기화
+    if (!Array.isArray(recipe.comments)) {
+      recipe.comments = [];
+    }
+
+    // 새로운 댓글 객체 생성
+    const newComment = {
+      userId,
+      content,
+      createdAt: new Date(),
+    };
+
+    // 댓글 추가
+    recipe.comments.push(newComment);
+
+    await recipe.save();
+
+    const addedComment = recipe.comments[recipe.comments.length - 1];
+
+    res.status(201).json({
+      success: true,
+      comment: addedComment, // 추가된 댓글 반환
+      comments: recipe.comments.length, // 전체 댓글 수 반환
+    });
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
+    res.status(500).json({ success: false, message: "Failed to add comment", error: error.message });
+  }
+});
+
+// 댓글 수정
+app.put("/recipes/:id/comments/:commentId", verifyToken, async (req, res) => {
+  const { content } = req.body; // 요청 바디에서 content 추출
+  const { id, commentId } = req.params; // 레시피 및 댓글 ID
+  const userId = req.user.userId; // verifyToken에서 저장된 사용자 ID 사용
+
+  console.log("[Back] 댓글 수정 요청 수신:");
+  console.log("[Back] 레시피 ID:", id);
+  console.log("[Back] 댓글 ID:", commentId);
+  console.log("[Back] UserID:", userId);
+  console.log("[Back] Content:", content);
+
+  if (!content || !content.trim()) {
+    return res.status(400).json({ message: "댓글 내용을 입력해주세요." });
+  }
+
+  try {
+    const recipe = await Recipe.findById(id);
+    if (!recipe) {
+      return res.status(404).json({ message: "레시피를 찾을 수 없습니다." });
+    }
+
+    const comment = recipe.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "댓글을 찾을 수 없습니다." });
+    }
+
+    if (comment.userId !== userId) {
+      return res.status(403).json({ message: "이 댓글을 수정할 권한이 없습니다." });
+    }
+
+    comment.content = content; // 댓글 내용 수정
+    await recipe.save();
+
+    res.status(200).json({ message: "댓글이 성공적으로 수정되었습니다.", comment });
+  } catch (error) {
+    console.error("댓글 수정 중 오류:", error.message);
+    res.status(500).json({ message: "댓글 수정에 실패했습니다." });
+  }
+});
+
+
+// 댓글 삭제
+app.delete("/recipes/:id/comments/:commentId", verifyToken, async (req, res) => {
+  const { id, commentId } = req.params; // 레시피 ID와 댓글 ID
+  const userId = req.user.userId; // 인증된 사용자 ID
+
+  console.log("댓글 삭제 요청 수신:");
+  console.log("레시피 ID:", id);
+  console.log("댓글 ID:", commentId);
+  console.log("UserID:", userId);
+
+  try {
+    const recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+      return res.status(404).json({ success: false, message: "Recipe not found" });
+    }
+
+    const comment = recipe.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({ success: false, message: "Comment not found" });
+    }
+
+    if (comment.userId !== userId) {
+      return res.status(403).json({ success: false, message: "You are not authorized to delete this comment" });
+    }
+
+    // 댓글 배열에서 제거
+    recipe.comments = recipe.comments.filter((c) => c._id.toString() !== commentId);
+    await recipe.save();
+
+    res.status(200).json({ success: true, message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting comment:", error.message);
+    res.status(500).json({ success: false, message: "Failed to delete comment", error: error.message });
   }
 });
 
