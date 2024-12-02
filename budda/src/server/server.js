@@ -337,6 +337,18 @@ app.get("/recipes/:id/comments", async (req, res) => {
       (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
     );
 
+    // 댓글 작성자의 정보를 동적으로 가져오기
+    const commentsWithUserInfo = await Promise.all(
+      recipe.comments.map(async (comment) => {
+        const user = await User.findOne({ googleId: comment.userId }); // 사용자 정보 조회
+        return {
+          ...comment.toObject(), // 댓글 데이터
+          name: user?.name || "Unknown", // 사용자 이름
+          picture: user?.picture || "https://via.placeholder.com/30", // 사용자 프로필 사진
+        };
+      })
+    );
+
     res.status(200).json(sortedComments);
   } catch (error) {
     console.error("Error fetching comments:", error.message);
