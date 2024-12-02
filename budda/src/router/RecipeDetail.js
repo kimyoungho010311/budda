@@ -40,7 +40,25 @@ function RecipeDetail() {
         throw new Error(`Failed to fetch comments: ${response.status}`);
       }
       const commentsData = await response.json();
-      setComments(commentsData);
+
+      // Fetch user data for each comment
+      const commentsWithUserInfo = await Promise.all(
+        commentsData.map(async (comment) => {
+          const userResponse = await fetch(
+            `http://localhost:5000/profile/${comment.userId}`
+          );
+          const userData = userResponse.ok
+            ? await userResponse.json()
+            : { user: { name: "Unknown", picture: "https://via.placeholder.com/30" } };
+          return {
+            ...comment,
+            name: userData.user.name,
+            picture: userData.user.picture,
+          };
+        })
+      );
+
+      setComments(commentsWithUserInfo);
     } catch (err) {
       console.error("Error fetching comments:", err.message);
     }
