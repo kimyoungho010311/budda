@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode"; // jwt-decode 라이브러리 import
 import "./Profile.css"; // 스타일링 파일
 import NavBarModule from "../components/NavBar/NavBar";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
 
 const currentUserGoogleId =
   localStorage.getItem("token") && jwtDecode(localStorage.getItem("token")).sub;
@@ -161,6 +162,18 @@ function ProfilePage() {
   const handleDeleteProfile = async () => {
     if (!window.confirm("정말로 계정을 삭제하시겠습니까?")) return;
 
+    const handleLogout = () => {
+      // 로컬 스토리지 모두 제거
+      localStorage.clear();
+      console.log("Access token has been removed.");
+  
+      // Google OAuth 로그아웃 처리
+      googleLogout();
+  
+      // 홈 화면으로 리디렉션
+      navigate("/budda");
+    };
+
     try {
       const token = localStorage.getItem("accessToken");
       const response = await fetch(`http://localhost:5000/profile/${googleId}`, {
@@ -172,7 +185,7 @@ function ProfilePage() {
 
       if (response.ok) {
         alert("계정이 성공적으로 삭제되었습니다.");
-        window.location.href = "/budda";
+        handleLogout();
       } else {
         const errorData = await response.json();
         console.error("Failed to delete profile:", errorData);
