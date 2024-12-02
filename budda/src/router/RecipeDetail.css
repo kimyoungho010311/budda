@@ -19,10 +19,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: column; /* 텍스트와 이미지 정렬 */
   text-decoration: none;
   color: black;
+  width: 150px; /* 고정된 너비 */
+  height: 150px; /* 고정된 높이 */
+  object-fit: cover; /* 이미지 비율 유지하며 영역 채우기 */
+  border-radius: 10%;
+  overflow: hidden; /* 영역을 벗어난 이미지 숨김 */
+  margin: 0 auto; /* 중앙 정렬 */
 }
+
 
 .wrapp_catgoreis_info {
   display: flex;
