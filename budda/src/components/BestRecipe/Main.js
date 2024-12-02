@@ -145,7 +145,7 @@ function Main() {
           ))
         ) : (
           <div className="wrapp_loading_message">
-            <p>No recently viewed recipes.</p>
+            <p>Loading recently viewed recipes...</p>
           </div>
         )}
       </div>

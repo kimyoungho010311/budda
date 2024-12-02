@@ -349,6 +349,7 @@ app.post("/recipes/:id/comments", verifyToken, async (req, res) => {
   const { content } = req.body; // 요청 바디에서 사용자 ID와 댓글 내용 추출
   const { id } = req.params; // 게시글 ID
   const userId = req.user.userId;
+
   console.log(c.red(`-----------------------------------------`));
   console.log(c.green("댓글 추가 요청 수신:"));
   console.log(c.green(`레시피 ID : `) + c.yellow(`${id}`));
@@ -376,10 +377,23 @@ app.post("/recipes/:id/comments", verifyToken, async (req, res) => {
       recipe.comments = [];
     }
 
+    // 데이터베이스에서 사용자 정보 조회
+    const user = await User.findOne({ googleId: userId });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const { name, picture } = user;
+
     // 새로운 댓글 객체 생성
     const newComment = {
       userId,
       content,
+      name,
+      picture,
       createdAt: new Date(),
     };
 
@@ -523,6 +537,52 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(c.blue("사용자가 연결을 종료했습니다."));
   });
+});
+
+// 프로필 수정 API
+app.put("/profile/:googleId", jwtAuthMiddleware, async (req, res) => {
+  const { googleId } = req.params;
+  const { name, picture } = req.body;
+
+  if (req.user.userId !== googleId) {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const updateData = {};
+    if (name) updateData.name = name;
+    if (picture) updateData.picture = picture;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate({ googleId }, { $set: updateData }, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update profile", error: error.message });
+  }
+});
+
+// 프로필 삭제 API
+app.delete("/profile/:googleId", jwtAuthMiddleware, async (req, res) => {
+  const { googleId } = req.params;
+
+  if (req.user.userId !== googleId) {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const user = await User.findOneAndDelete({ googleId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await Recipe.deleteMany({ userId: googleId });
+
+    res.status(200).json({ message: "Profile deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete profile", error: error.message });
+  }
 });
 
 // 사용자 정보 조회 API
