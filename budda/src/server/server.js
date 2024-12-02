@@ -579,6 +579,18 @@ app.delete("/profile/:googleId", jwtAuthMiddleware, async (req, res) => {
 
     await Recipe.deleteMany({ userId: googleId });
 
+    // 사용자가 작성한 댓글 삭제
+    await Recipe.updateMany(
+      { "comments.userId": googleId }, // 조건: 해당 사용자의 댓글
+      { $pull: { comments: { userId: googleId } } } // 해당 댓글 삭제
+    );
+
+    // 사용자가 좋아요를 누른 데이터에서 사용자 제거
+    await Recipe.updateMany(
+      { likes: googleId }, // 조건: 해당 사용자가 좋아요를 누른 레시피
+      { $pull: { likes: googleId } } // 좋아요 목록에서 사용자 ID 제거
+    );
+
     res.status(200).json({ message: "Profile deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete profile", error: error.message });
