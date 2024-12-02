@@ -469,9 +469,23 @@ app.put("/recipes/:id/comments/:commentId", verifyToken, async (req, res) => {
     comment.content = content; // 댓글 내용 수정
     await recipe.save();
 
+    // 댓글 작성자의 프로필 정보 가져오기
+    const user = await User.findOne({ googleId: userId });
+    if (!user) {
+      return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+    }
+
+    const updatedComment = {
+      ...comment.toObject(),
+      name: user.name,
+      picture: user.picture,
+    };
+
+    console.log(updatedComment);
+
     res
       .status(200)
-      .json({ message: "댓글이 성공적으로 수정되었습니다.", comment });
+      .json({ message: "댓글이 성공적으로 수정되었습니다.", comment: updatedComment, });
   } catch (error) {
     console.error("댓글 수정 중 오류:", error.message);
     res.status(500).json({ message: "댓글 수정에 실패했습니다." });

@@ -133,9 +133,24 @@ function RecipeDetail() {
         throw new Error("댓글 추가에 실패했습니다.");
       }
 
-      const { comment } = await response.json(); // 서버 응답에서 새 댓글 데이터 추출
+      const updatedComment = await response.json();
 
-      setComments((prevComments) => [...prevComments, comment]); // 기존 댓글에 새 댓글 추가
+      // 사용자 정보 동적 로드
+      const userResponse = await fetch(
+        `http://localhost:5000/profile/${updatedComment.comment.userId}`
+      );
+      const userData = userResponse.ok
+        ? await userResponse.json()
+        : { user: { name: "Unknown", picture: "https://via.placeholder.com/30"}};
+
+      const updatedCommentWithUser = {
+        ...updatedComment.comment,
+        name: userData.user.name,
+        picture: userData.user.picture,
+      };
+
+      // 기존 댓글 목록에 새 댓글 추가
+      setComments((prevComments) => [...prevComments, updatedCommentWithUser]);
       setNewComment(""); // 입력 필드 초기화
     } catch (err) {
       console.error("Error adding comment:", err.message);
@@ -168,9 +183,24 @@ function RecipeDetail() {
       }
 
       const updatedComment = await response.json();
+
+      // 사용자 정보 동적 로드
+      const userResponse = await fetch(
+        `http://localhost:5000/profile/${updatedComment.comment.userId}`
+      );
+      const userData = userResponse.ok
+        ? await userResponse.json()
+        : { user: { name: "Unknown", picture: "https://via.placeholder.com/30" } };
+
+      const updatedCommentWithUser = {
+        ...updatedComment.comment,
+        name: userData.user.name,
+        picture: userData.user.picture,
+      };
+
       setComments((prevComments) =>
         prevComments.map((comment) =>
-          comment._id === commentId ? updatedComment.comment : comment
+          comment._id === commentId ? updatedCommentWithUser : comment
         )
       );
       setEditingComment(null);
