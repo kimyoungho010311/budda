@@ -150,7 +150,7 @@ function IntroduceRecipe() {
             <div key={index} className="inputDiv">
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="재료명"
                 value={ingredient.name}
                 onChange={(e) =>
                   handleIngredientChange(index, "name", e.target.value)
@@ -158,7 +158,7 @@ function IntroduceRecipe() {
               />
               <input
                 type="text"
-                placeholder="Quantity"
+                placeholder="양"
                 value={ingredient.quantity}
                 onChange={(e) =>
                   handleIngredientChange(index, "quantity", e.target.value)
@@ -166,7 +166,7 @@ function IntroduceRecipe() {
               />
               <input
                 type="text"
-                placeholder="Unit"
+                placeholder="단위"
                 value={ingredient.unit}
                 onChange={(e) =>
                   handleIngredientChange(index, "unit", e.target.value)
@@ -174,7 +174,7 @@ function IntroduceRecipe() {
               />
               <input
                 type="text"
-                placeholder="Note"
+                placeholder="메모"
                 value={ingredient.note}
                 onChange={(e) =>
                   handleIngredientChange(index, "note", e.target.value)
