@@ -282,7 +282,7 @@ function ProfilePage() {
           </div>
         ) : (
           <p style={{ textAlign: "center" }}>
-            You haven't uploaded any recipes yet.
+            This chef haven't uploaded any recipes yet.
           </p>
         )}
       </div>
