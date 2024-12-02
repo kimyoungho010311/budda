@@ -201,7 +201,7 @@ function RecipeDetail() {
         });
         if (response.ok) {
           alert("삭제가 완료되었습니다.");
-          navigate("/search");
+          navigate("/budda");
         } else {
           alert("삭제에 실패하였습니다.");
         }
