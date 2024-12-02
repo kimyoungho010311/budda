@@ -19,7 +19,7 @@ function NavBarModule() {
 
   const handleLogout = () => {
     // 로컬 스토리지에서 토큰 제거
-    localStorage.removeItem("accessToken");
+    localStorage.clear();
     console.log("Access token has been removed.");
 
     // Google OAuth 로그아웃 처리
