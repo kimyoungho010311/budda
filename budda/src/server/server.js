@@ -525,6 +525,52 @@ io.on("connection", (socket) => {
   });
 });
 
+// 프로필 수정 API
+app.put("/profile/:googleId", jwtAuthMiddleware, async (req, res) => {
+  const { googleId } = req.params;
+  const { name, picture } = req.body;
+
+  if (req.user.userId !== googleId) {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const updateData = {};
+    if (name) updateData.name = name;
+    if (picture) updateData.picture = picture;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate({ googleId }, { $set: updateData }, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update profile", error: error.message });
+  }
+});
+
+// 프로필 삭제 API
+app.delete("/profile/:googleId", jwtAuthMiddleware, async (req, res) => {
+  const { googleId } = req.params;
+
+  if (req.user.userId !== googleId) {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const user = await User.findOneAndDelete({ googleId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await Recipe.deleteMany({ userId: googleId });
+
+    res.status(200).json({ message: "Profile deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete profile", error: error.message });
+  }
+});
+
 // 사용자 정보 조회 API
 app.get("/profile/:googleId", async (req, res) => {
   const { googleId } = req.params;

@@ -2,14 +2,24 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode"; // jwt-decode 라이브러리 import
 import "./Profile.css"; // 스타일링 파일
 import NavBarModule from "../components/NavBar/NavBar";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+
+const currentUserGoogleId =
+  localStorage.getItem("token") && jwtDecode(localStorage.getItem("token")).sub;
 
 function ProfilePage() {
   const { googleId } = useParams();
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState([]);
   const [userRecipes, setUserRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
+  const [formData, setFormData] = useState({
+    name: "",
+    picture: null, // Base64 이미지 저장
+  });
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,11 +46,16 @@ function ProfilePage() {
 
           const data = await response.json();
           setUserInfo(data.user);
+
+          // 폼 데이터 업데이트
+          setFormData({
+            name: data.user.name || "",
+            picture: data.user.picture || null,
+          });
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching user info:", error.message);
           setError(error.message);
-        } finally {
-          setLoading(false);
         }
       };
 
@@ -74,6 +89,104 @@ function ProfilePage() {
     }
   }, [googleId]);
 
+  // 파일 변경 핸들러 (프로필 사진)
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          picture: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 입력값 변경 핸들러
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 프로필 저장
+  const handleSaveChanges = async () => {
+    if (!window.confirm("프로필을 수정하시겠습니까?")) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      const payload = {
+        name: formData.name,
+        picture: formData.picture, // Base64 이미지 전송
+      };
+
+      console.log("FormData being sent:", payload);
+
+      const response = await fetch(`http://localhost:5000/profile/${googleId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUserInfo(updatedUser.user);
+        setIsEditing(false);
+        alert("프로필이 성공적으로 업데이트되었습니다.");
+        navigate(`/profile/${googleId}`);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to update profile:", errorData);
+        alert("프로필 업데이트에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      alert("프로필 업데이트 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 프로필 삭제
+  const handleDeleteProfile = async () => {
+    if (!window.confirm("정말로 계정을 삭제하시겠습니까?")) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(`http://localhost:5000/profile/${googleId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        alert("계정이 성공적으로 삭제되었습니다.");
+        window.location.href = "/budda";
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to delete profile:", errorData);
+        alert("계정 삭제에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("Error deleting profile:", err);
+      alert("계정 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div>
       <NavBarModule />
@@ -81,12 +194,46 @@ function ProfilePage() {
         <div className="profile-container">
           <h1>셰프 정보</h1>
           <div className="profile-picture">
-            <img className="picture" src={userInfo.picture} alt="Profile" />
+            {isEditing ? (
+              <label htmlFor="file-input">
+                <img
+                  className="picture"
+                  src={
+                    formData.picture ||
+                    "https://via.placeholder.com/150?text=No+Image"
+                  }
+                  alt="프로필 사진"
+                />
+                <input
+                  type="file"
+                  id="file-input"
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </label>
+            ) : (
+              <img
+                className="picture"
+                src={userInfo.picture || "https://via.placeholder.com/150?text=No+Image"}
+                alt="프로필 사진"
+              />
+            )}
           </div>
           <div className="profile-details">
-            <p>
-              <strong>Name:</strong> {userInfo.name}
-            </p>
+            {isEditing ? (
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="이름을 입력하세요"
+              />
+            ) : (
+              <p>
+                <strong>Name:</strong> {userInfo.name}
+              </p>
+            )}
             <p>
               <strong>E-mail:</strong> {userInfo.email}
             </p>
@@ -94,6 +241,19 @@ function ProfilePage() {
               <strong>Google ID:</strong> {userInfo.googleId}
             </p>
           </div>
+          {currentUserGoogleId === googleId && (
+            <div>
+            {isEditing ? (
+              <>
+                <button onClick={handleSaveChanges}>Save</button>
+                <button onClick={() => setIsEditing(false)}>Cancel</button>
+              </>
+            ) : (
+              <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+            )}
+            <button onClick={handleDeleteProfile}>Delete Account</button>
+          </div>
+          )}
         </div>
       </div>
       <div className="user-recipes-container">
