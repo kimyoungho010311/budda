@@ -98,3 +98,11 @@
   color: var(--btn-hover);
   transform: scale(1.05); /* 호버 시 확대 효과 */
 }
+.link-style {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0;
+}

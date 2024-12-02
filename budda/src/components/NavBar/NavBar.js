@@ -77,10 +77,10 @@ function NavBarModule() {
       <div className="nav_bar_log">
         {isAuthenticated() ? (
           <div className="warppbtns">
-            <Link onClick={handleLogout} className="nav_bar_logout">
+            <button onClick={handleLogout} className="nav_bar_logout link-style">
               Log out
-            </Link>
-            <Link to={`/profile/${getGoogleId()}`} className="nav_bar_logout">
+            </button>
+            <Link to={`/profile/${googleId}`} className="nav_bar_logout">
               Profile
             </Link>
           </div>
@@ -89,7 +89,6 @@ function NavBarModule() {
             <Link to="/login" className="nav_bar_log_1">
               Log in
             </Link>
-
           </>
         )}
       </div>

@@ -349,6 +349,7 @@ app.post("/recipes/:id/comments", verifyToken, async (req, res) => {
   const { content } = req.body; // 요청 바디에서 사용자 ID와 댓글 내용 추출
   const { id } = req.params; // 게시글 ID
   const userId = req.user.userId;
+
   console.log(c.red(`-----------------------------------------`));
   console.log(c.green("댓글 추가 요청 수신:"));
   console.log(c.green(`레시피 ID : `) + c.yellow(`${id}`));
@@ -376,10 +377,23 @@ app.post("/recipes/:id/comments", verifyToken, async (req, res) => {
       recipe.comments = [];
     }
 
+    // 데이터베이스에서 사용자 정보 조회
+    const user = await User.findOne({ googleId: userId });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const { name, picture } = user;
+
     // 새로운 댓글 객체 생성
     const newComment = {
       userId,
       content,
+      name,
+      picture,
       createdAt: new Date(),
     };
 

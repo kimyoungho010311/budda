@@ -381,10 +381,34 @@ function RecipeDetail() {
                     <div className="timestamp">
                       {new Date(comment.createdAt).toLocaleString()}
                     </div>
-                    <div className="comment_text">
-                      <strong>{comment.userId}</strong>: {comment.content}
+                    <div className="comment_text" style={{ display: "flex", alignItems: "center" }}>
+                      {/* 프로필 사진 */}
+                      <a
+                        href={`http://localhost:3000/profile/${comment.userId}`}
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "inherit",
+                          textDecoration: "none",
+                          marginRight: "4px",
+                        }}
+                      >
+                        <img
+                          src={comment.picture || "https://via.placeholder.com/30"}
+                          alt={`${comment.name}'s avatar`}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "10%",
+                            marginRight: "5px", // 이름과 사진 간격
+                          }}
+                        />
+                      </a>
+                      {/* 이름과 댓글 내용 */}
+                      <span>
+                        <strong>{comment.name}</strong>: {comment.content}
+                      </span>
                       {comment.userId === currentUserGoogleId && (
-                        <div className="comment_actions">
+                        <div className="comment_actions" style={{ marginLeft: "auto" }}>
                           <button
                             className="comment_actions_btn"
                             onClick={() => {
