@@ -16,10 +16,45 @@ const useRecipeForm = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData((prev) => ({
-          ...prev,
-          image: reader.result,
-        }));
+        const img = new Image();
+        img.src = reader.result;
+  
+        img.onload = () => {
+          // Create a canvas
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+  
+          // Set canvas dimensions
+          const maxWidth = 1000;
+          const maxHeight = 1000;
+          let width = img.width;
+          let height = img.height;
+  
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+  
+          canvas.width = width;
+          canvas.height = height;
+  
+          // Draw the image on the canvas
+          ctx.drawImage(img, 0, 0, width, height);
+  
+          // Convert the canvas to Base64 without specifying a file format
+          const resizedImage = canvas.toDataURL();
+          setFormData((prev) => ({
+            ...prev,
+            image: resizedImage,
+          }));
+        };
       };
       reader.readAsDataURL(file);
     }
